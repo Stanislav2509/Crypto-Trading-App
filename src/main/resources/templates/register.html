@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+<main>
+    <div>
+        <h1 >Sign up</h1>
+        <form   th:action="@{/register}"
+                th:method="POST"
+                th:object="${userRegisterBindingModel}">
+
+            <div th:if="${hasRegistrationError}" >
+                <p class="register_error">Registration Error occurred</p>
+            </div>
+
+            <div>
+                <div>
+                    <input type="text" th:field="*{firstName}" id="firstName" placeholder="First name">
+                    <small th:if="${#fields.hasErrors('firstName')}"
+                           th:errors="*{firstName}" ></small>
+                </div>
+                <div>
+                    <input type="text" id="lastName" th:field="*{lastName}" placeholder="Last name">
+                    <small th:if="${#fields.hasErrors('lastName')}"
+                           th:errors="*{lastName}" >Last name error msg</small>
+                </div>
+                <div>
+                    <input th:type="email" th:id="email" th:field="*{email}" placeholder="Email">
+                    <small th:if="${#fields.hasErrors('email')}"
+                           th:errors="*{email}" >Email error msg</small>
+                </div>
+                <div>
+                    <input th:type="password" th:id="password" th:field="*{password}" placeholder="Password">
+                    <small th:if="${#fields.hasErrors('password')}"
+                           th:errors="*{password}" >Password error msg</small>
+                </div>
+                <div>
+                    <input th:type="password" th:id="confirmPassword" th:field="*{confirmPassword}" placeholder="Confirm password">
+                </div>
+                <div>
+                    <input type="tel" th:id="phoneNumber" th:field="*{phoneNumber}" placeholder="Phone number">
+                    <small th:if="${#fields.hasErrors('phoneNumber')}"
+                           th:errors="*{phoneNumber}" >Phone number error msg</small>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit">Sign up</button>
+            </div>
+
+        </form>
+    </div>
+</main>
+
+</body>
+</html>
