@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Real-time Crypto Prices</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body>
+<h1>Real-time Crypto Prices</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Pair</th>
+        <th>Price</th>
+    </tr>
+    </thead>
+    <tbody id="priceTable">
+    <tr th:each="entry : ${prices}">
+        <td th:text="${entry.key}"></td>
+        <td th:text="${entry.value}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    let socket = new SockJS('/ws');
+    let stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function(frame) {
+        console.log("Connected: " + frame);
+
+        stompClient.subscribe('/topic/prices', function(message) {
+            let prices = JSON.parse(message.body);
+
+            for (const [pair, price] of Object.entries(prices)) {
+                let rows = document.querySelectorAll("#priceTable tr");
+                for (let row of rows) {
+                    if (row.cells[0].innerText === pair) {
+                        row.cells[1].innerText = price;
+                    }
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
