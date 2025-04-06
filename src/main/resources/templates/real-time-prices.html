@@ -27,6 +27,11 @@
     <input class="logout-btn" type="submit"  value="Logout"/>
 </form>
 
+<form th:method="Get"
+      th:action="@{/transaction-history}">
+    <input  type="submit"  value="Transaction History"/>
+</form>
+
 <script th:src="@{js/real-time-prices.js}"> </script>
 </body>
 </html>
