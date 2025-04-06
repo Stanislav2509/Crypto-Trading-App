@@ -16,4 +16,6 @@ public interface UserService {
 
     Optional<Transaction> sellCrypto(String email, String pair, double spend, double quantity);
     User findByEmail(String email);
+
+    void resetProfile(String email);
 }

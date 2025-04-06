@@ -5,10 +5,13 @@ import com.cryptotrading.Crypto.Trading.App.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.security.Principal;
 
 @Controller
 public class UserController {
@@ -56,5 +59,16 @@ public class UserController {
         modelAndView.addObject("bad_credentials", "true");
 
         return modelAndView;
+    }
+
+    @GetMapping("/warning-reset-profile")
+    public String warningResetProfile(){
+        return "warning-reset-profile";
+    }
+
+    @DeleteMapping("/reset-profile")
+    public String resetProfile(Principal principal){
+        userService.resetProfile(principal.getName());
+        return "redirect:/real-time-prices";
     }
 }
