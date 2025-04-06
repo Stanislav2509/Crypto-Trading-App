@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -180,5 +181,16 @@ public class UserServiceImpl implements UserService {
             user= userOpt.get();
         }
         return user;
+    }
+
+    @Override
+    public void resetProfile(String email) {
+        User user = findByEmail(email);
+        List<Asset> assets= assetRepository.findAllByUser(user);
+        assetRepository.deleteAll(assets);
+        List<Transaction> transactions = transactionRepository.findAllByUser(user);
+        transactionRepository.deleteAll(transactions);
+        user.setBalance(10000);
+        userRepository.save(user);
     }
 }

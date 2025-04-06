@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Warning</title>
+</head>
+<body>
+<h1>WARNING!!!</h1>
+<h2>Are you sure you want to rest your profile?</h2>
+<form th:method="Delete"
+      th:action="@{/reset-profile}">
+  <input  type="submit"  value="YES"/>
+</form>
+<form th:method="Get"
+      th:action="@{/real-time-prices}">
+  <input  type="submit"  value="NO"/>
+</form>
+</body>
+</html>

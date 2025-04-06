@@ -32,6 +32,11 @@
     <input  type="submit"  value="Transaction History"/>
 </form>
 
+<form th:method="Get"
+      th:action="@{/warning-reset-profile}">
+    <input  type="submit"  value="Reset Profile"/>
+</form>
+
 <script th:src="@{js/real-time-prices.js}"> </script>
 </body>
 </html>
