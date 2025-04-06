@@ -21,7 +21,6 @@ public class RestAPIServiceImpl implements RestAPIService {
     public RestAPIServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
-
     String[] pairs = {
                 "BTC/USD", "ETH/USD", "USDT/USD", "XRP/USD","SOL/USD",
                 "USDC/USD", "DOGE/USD", "ADA/USD", "TRX/USD","TON/USD",
@@ -46,7 +45,6 @@ public class RestAPIServiceImpl implements RestAPIService {
                 if (!pairNode.isMissingNode()) {
                     String price = pairNode.path("c").get(0).asText();
                     prices.put(pair, price);
-
                 }
             }
 

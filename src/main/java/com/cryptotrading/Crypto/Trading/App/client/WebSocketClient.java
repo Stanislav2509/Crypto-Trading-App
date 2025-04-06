@@ -1,24 +1,29 @@
 package com.cryptotrading.Crypto.Trading.App.client;
-import com.fasterxml.jackson.core.JsonProcessingException;
+
+import com.cryptotrading.Crypto.Trading.App.model.entity.CryptoType;
+import com.cryptotrading.Crypto.Trading.App.repo.CryptoTypeRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import java.net.http.WebSocket;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class WebSocketClient implements WebSocket.Listener {
-
-
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
+    private final CryptoTypeRepository cryptoTypeRepository;
 
     private final Map<String, String> currentPrices = new ConcurrentHashMap<>();
+
+    public WebSocketClient(SimpMessagingTemplate messagingTemplate, CryptoTypeRepository cryptoTypeRepository) {
+        this.messagingTemplate = messagingTemplate;
+        this.cryptoTypeRepository = cryptoTypeRepository;
+    }
 
     @Override
     public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
@@ -38,6 +43,12 @@ public class WebSocketClient implements WebSocket.Listener {
                 String price = tradesArray.get(0).get(0).asText();
 
                 currentPrices.put(pair, price);
+
+                Optional<CryptoType> cryptoOpt = cryptoTypeRepository.findBySymbol(pair);
+                CryptoType cryptoType = cryptoOpt.orElseGet(CryptoType::new);
+                cryptoType.setSymbol(pair);
+                cryptoType.setPrice(Double.parseDouble(price));
+                cryptoTypeRepository.save(cryptoType);
 
                 messagingTemplate.convertAndSend("/topic/prices", currentPrices);
             }
