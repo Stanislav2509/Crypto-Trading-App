@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Deal Details</title>
+</head>
+<body>
+<h2>Sell Details</h2>
+
+
+<p><strong>Receive: </strong> <span th:text="${transaction.receiveMoney}"></span> USD</p>
+<p><strong th:text="'Current Price of ' + ${pair}"></strong> <span th:text="${transaction.currCryptoPrice}"></span> USD</p>
+<p><strong>Cost </strong> <span th:text="${transaction.spendCrypto}"></span> <strong th:text="${pair}"> </strong></p>
+
+<a href="/real-time-prices">Home Page</a>
+</body>
+</html>

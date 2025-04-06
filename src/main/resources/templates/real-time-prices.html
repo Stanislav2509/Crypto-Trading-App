@@ -16,8 +16,7 @@
     </thead>
     <tbody id="priceTable">
     <tr th:each="entry : ${prices}">
-        <td ><a th:href="@{/chart/{pair}(pair=${#strings.replace(entry.key, '/', '-')})}"
-                                      th:text="${entry.key}"></a></td>
+        <td ><a th:href="@{/chart/{pair}(pair=${#strings.replace(entry.key, '/', '-')})}" th:text="${entry.key}"></a></td>
         <td th:text="${entry.value}"></td>
     </tr>
     </tbody>

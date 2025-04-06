@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title th:text="'Candlestick Chart for ' + ${pair}">Chart</title>
     <script src="https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js"></script>
 
-
 </head>
 <body>
+
 <h2 th:text="${pair}"></h2>
 
 <form method="get" th:action="@{/chart/{pair}(pair=${pair.replace('/', '-')})}">
@@ -23,7 +24,7 @@
 <div id="chart" style="width: 100%; height: 500px;"></div>
 
 <script th:inline="javascript">
-     window.candleData = /*[[${candles}]]*/ [];
+    window.candleData = /*[[${candles}]]*/ [];
 </script>
 
 <script>
@@ -60,6 +61,95 @@
     }, 100);
 </script>
 
+<form method="post" th:action="@{/buy}" th:object="${tradeBindingModel}">
+    <h2 th:text="'Buy ' + ${pair}"></h2>
+    <input type="hidden" th:field="*{pair}" />
+
+    <label for="spend">Spend USD </label>
+    <input type="number" th:field="*{spend}" step="0.01" min="0" th:attr="max=${userBalance}"
+           oninput="validateSpendUsd()" id="spendUsd" name="spend" required />
+    <button type="button" onclick="setMaxUsd()">MAX</button>
+    <br/>
+
+    <label for="receive" th:text="'Receive ' + ${pair}"></label>
+    <input type="text" id="receiveCrypto" name="receive" readonly />
+
+    <br/>
+    <button type="submit">Buy</button>
+</form>
+
+<form method="post" th:action="@{/sell}" th:object = "${tradeBindingModel}">
+    <h2 th:text="'Sell ' + ${pair}"></h2>
+    <input type="hidden" th:field="*{pair}" />
+
+    <label for="spend" th:text="'Spend ' + ${pair}"></label>
+    <input type="number" th:field="*{spend}" step="any" min="0" th:attr="max=${quantityCrypto}"
+           oninput="validateSpendCrypto()" id="spendCrypto" name="spend"  required />
+    <button type="button" onclick="setMaxCrypto()">MAX</button>
+    <small th:if="${#fields.hasErrors('spend')}"
+           th:errors="*{spend}" ></small>
+    <br/>
+
+    <label for="receive">Receive USD </label>
+    <input type="text" id="receiveUsd" name="receive" readonly />
+
+    <br/>
+    <button type="submit">Sell</button>
+</form>
+
+<script>
+    const currentPrice = [[${currentPrice}]];
+    const userBalance = [[${userBalance}]];
+    const quantityCrypto = [[${quantityCrypto}]];
+
+    function validateSpendUsd() {
+        const spendInput = document.getElementById("spendUsd");
+        const max = parseFloat(spendInput.max);
+        const value = parseFloat(spendInput.value);
+
+        if (value > max) {
+            spendInput.value = max;
+        }
+
+        calculateReceiveCrypto();
+    }
+
+    function setMaxUsd() {
+         document.getElementById("spendUsd").value = userBalance;
+        calculateReceiveCrypto();
+    }
+        document.getElementById("spendUsd").addEventListener("input", calculateReceiveCrypto);
+
+    function calculateReceiveCrypto() {
+       const spend = parseFloat(document.getElementById("spendUsd").value);
+        const receive = spend / currentPrice;
+        document.getElementById("receiveCrypto").value = isNaN(receive) ? '' : receive.toFixed(6);
+    }
+
+function validateSpendCrypto() {
+        const spendInput = document.getElementById("spendCrypto");
+        const max = parseFloat(spendInput.max);
+        const value = parseFloat(spendInput.value);
+
+        if (value > max) {
+            spendInput.value = max;
+        }
+
+        calculateReceiveUsd();
+    }
+
+    function setMaxCrypto() {
+        document.getElementById("spendCrypto").value = quantityCrypto;
+        calculateReceiveUsd();
+    }
+        document.getElementById("spendCrypto").addEventListener("input", calculateReceiveUsd);
+
+    function calculateReceiveUsd() {
+       const spend = parseFloat(document.getElementById("spendCrypto").value);
+        const receive = spend * currentPrice;
+        document.getElementById("receiveUsd").value = isNaN(receive) ? '' : receive.toFixed(6);
+    }
+</script>
 
 </body>
 </html>
