@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transaction History</title>
+</head>
+<body>
+<a href="/real-time-prices">Home Page</a>
+<table border="1">
+    <thead>
+      <tr>
+          <th>Crypto Type</th>
+          <th>Transaction Type</th>
+          <th>Spend Money</th>
+          <th>Receive Crypto</th>
+          <th>Spend Crypto</th>
+          <th>Receive Money</th>
+          <th>Price During the deal</th>
+          <th>Date time</th>
+      </tr>
+    </thead>
+  <tbody>
+  <tr th:each ="tran : ${transactions}">
+    <td th:text="${tran.cryptoType.symbol}"></td>
+    <td th:text="${tran.transactionType}"></td>
+    <td th:text="${tran.spendMoney}"></td>
+    <td th:text="${tran.receiveCrypto}"></td>
+    <td th:text="${tran.spendCrypto}"></td>
+    <td th:text="${tran.receiveMoney}"></td>
+    <td th:text="${tran.currCryptoPrice}"></td>
+    <td th:text="${#temporals.format(tran.dateTime, 'dd.MM.yyyy HH:mm')}"></td>
+
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
