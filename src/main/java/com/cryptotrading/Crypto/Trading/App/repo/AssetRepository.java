@@ -14,4 +14,8 @@ public interface AssetRepository extends JpaRepository<Asset, Long> {
     Optional<Asset> findByCryptoTypeAndUser(CryptoType cryptoType, User user);
 
     List<Asset> findAllByUser(User user);
+
+    List<Asset> findAllByCryptoType(CryptoType cryptoType);
+
+    Optional<Asset> findByCryptoTypeAndUserId(CryptoType cryptoType, Long currentUserId);
 }

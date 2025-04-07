@@ -91,9 +91,11 @@ public class UserServiceImpl implements UserService {
 
         Optional<Asset> assetOpt = assetRepository.findByCryptoTypeAndUser(cryptoType,user);
         Asset asset = assetOpt.orElseGet(Asset::new);
-        asset.setTotal_quantity(asset.getTotal_quantity()+quantity);
+        asset.setTotalQuantity(asset.getTotalQuantity()+quantity);
         asset.setUser(user);
         asset.setCryptoType(cryptoType);
+        asset.setMoneyCurrency(asset.getMoneyCurrency()+spend);
+        asset.setPriceDuringPurchase(cryptoType.getPrice());
         assetRepository.save(asset);
 
         return Optional.of(transaction);
@@ -118,7 +120,7 @@ public class UserServiceImpl implements UserService {
 
         Optional<Asset> assetOpt = assetRepository.findByCryptoTypeAndUser(cryptoType, user);
         if(assetOpt.isPresent()){
-            quantity = assetOpt.get().getTotal_quantity();
+            quantity = assetOpt.get().getTotalQuantity();
         }
         return quantity;
     }
@@ -143,6 +145,9 @@ public class UserServiceImpl implements UserService {
         }
         cryptoType = cryptoOpt.get();
 
+        Optional<Asset> assetOpt = assetRepository.findByCryptoTypeAndUser(cryptoType,user);
+        Asset asset = assetOpt.orElseGet(Asset::new);
+
         Transaction transaction = new Transaction();
         transaction.setUser(user);
         transaction.setTransactionType("Sell");
@@ -151,20 +156,21 @@ public class UserServiceImpl implements UserService {
         transaction.setSpendCrypto(spend);
         transaction.setReceiveMoney(receiveMoney);
         transaction.setCurrCryptoPrice(cryptoType.getPrice());
+        transaction.setProfitLoss(asset.getProfitLoss());
 
         transactionRepository.save(transaction);
         user.setBalance(currentUserBalance+receiveMoney);
         userRepository.save(user);
 
-        Optional<Asset> assetOpt = assetRepository.findByCryptoTypeAndUser(cryptoType,user);
-        Asset asset = assetOpt.orElseGet(Asset::new);
-        double remainingQuantity = asset.getTotal_quantity()- spend;
+
+        double remainingQuantity = asset.getTotalQuantity()- spend;
         if(remainingQuantity==0){
             assetRepository.delete(asset);
         }else {
-            asset.setTotal_quantity(remainingQuantity);
+            asset.setTotalQuantity(remainingQuantity);
             asset.setUser(user);
             asset.setCryptoType(cryptoType);
+            asset.setMoneyCurrency(asset.getMoneyCurrency() - (cryptoType.getPrice()*spend));
             assetRepository.save(asset);
         }
 
