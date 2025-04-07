@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wallet</title>
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body>
+<a href="/real-time-prices">Home Page</a>
+<table border="1">
+  <p>Balance in USD <span th:text="${balanceUSD}"></span></p>
+  <thead>
+  <tr>
+    <th>Crypto Type</th>
+    <th>Total Quantity</th>
+    <th>Money in Currency</th>
+    <th>Profit/Loss</th>
+  </tr>
+  </thead>
+  <tbody id="assetTable">
+  <tr th:each ="asset : ${assets}">
+    <td th:text="${asset.cryptoType.symbol}"></td>
+    <td th:text="${asset.totalQuantity}"></td>
+    <td th:text="${asset.moneyCurrency}"></td>
+    <td th:id="${asset.cryptoType.symbol}"></td>
+  </tr>
+  </tbody>
+</table>
+
+<script>
+  let socket = new SockJS('/ws');
+  let stompClient = Stomp.over(socket);
+
+  stompClient.connect({}, function(frame) {
+
+      stompClient.subscribe('/topic/asset', function(message) {
+          let prices = JSON.parse(message.body);
+
+          let rows = document.querySelectorAll("#assetTable tr");
+          rows.forEach(row => {
+              const cryptoType = row.cells[0].innerText;
+              row.cells[2].innerText = prices[cryptoType].moneyCurrency.toFixed(2);
+
+              let profitLoss = prices[cryptoType].profitLoss;
+              let profitLossCell = document.getElementById(`${cryptoType}`);
+                profitLossCell.innerText = profitLoss.toFixed(2);
+          });
+      });
+  });
+</script>
+
+</body>
+</html>

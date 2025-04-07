@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.security.Principal;
 import java.util.Map;
 
 @Controller
@@ -24,11 +25,11 @@ public class WebSocketRestAPIController {
     }
 
     @GetMapping("/real-time-prices")
-    public String getPricesTable(Model model) {
+    public String getPricesTable(Model model, Principal principal) {
         Map<String, String> prices = cryptoTypeService.getPairsPrices();
         model.addAttribute("prices", prices);
 
-        webSocketService.viewRealTimePrices();
+        webSocketService.viewRealTimePrices(principal.getName());
 
         return "real-time-prices";
     }

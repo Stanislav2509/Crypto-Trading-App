@@ -8,12 +8,25 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "assets")
 public class Asset extends BaseEntity{
+
+    private double totalQuantity;
+    private double moneyCurrency;
+    private double priceDuringPurchase;
+    private double priceNow;
+    private double profitLoss;
+
     @ManyToOne
     private User user;
     @ManyToOne
     private CryptoType cryptoType;
 
-    private double total_quantity;
+    public double getMoneyCurrency() {
+        return moneyCurrency;
+    }
+
+    public void setMoneyCurrency(double moneyCurrency) {
+        this.moneyCurrency = moneyCurrency;
+    }
 
     public User getUser() {
         return user;
@@ -31,11 +44,35 @@ public class Asset extends BaseEntity{
         this.cryptoType = cryptoType;
     }
 
-    public double getTotal_quantity() {
-        return total_quantity;
+    public double getTotalQuantity() {
+        return totalQuantity;
     }
 
-    public void setTotal_quantity(double total_quantity) {
-        this.total_quantity = total_quantity;
+    public void setTotalQuantity(double totalQuantity) {
+        this.totalQuantity = totalQuantity;
+    }
+
+    public double getPriceDuringPurchase() {
+        return priceDuringPurchase;
+    }
+
+    public void setPriceDuringPurchase(double priceDuringPurchase) {
+        this.priceDuringPurchase = priceDuringPurchase;
+    }
+
+    public double getPriceNow() {
+        return priceNow;
+    }
+
+    public void setPriceNow(double priceNow) {
+        this.priceNow = priceNow;
+    }
+
+    public double getProfitLoss() {
+        return profitLoss;
+    }
+
+    public void setProfitLoss(double profitLoss) {
+        this.profitLoss = profitLoss;
     }
 }

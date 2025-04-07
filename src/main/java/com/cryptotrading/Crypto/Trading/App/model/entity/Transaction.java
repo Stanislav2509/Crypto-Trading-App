@@ -19,6 +19,7 @@ public class Transaction extends BaseEntity {
     private  double receiveMoney;
     private double spendMoney;
     private double currCryptoPrice;
+    private double profitLoss;
     private LocalDateTime dateTime;
     @NotBlank
     private String transactionType;
@@ -92,5 +93,13 @@ public class Transaction extends BaseEntity {
 
     public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
+    }
+
+    public double getProfitLoss() {
+        return profitLoss;
+    }
+
+    public void setProfitLoss(double profitLoss) {
+        this.profitLoss = profitLoss;
     }
 }

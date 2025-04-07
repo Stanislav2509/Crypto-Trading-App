@@ -17,6 +17,7 @@
           <th>Receive Money</th>
           <th>Price During the deal</th>
           <th>Date time</th>
+          <th>Profit/Loss</th>
       </tr>
     </thead>
   <tbody>
@@ -29,6 +30,7 @@
     <td th:text="${tran.receiveMoney}"></td>
     <td th:text="${tran.currCryptoPrice}"></td>
     <td th:text="${#temporals.format(tran.dateTime, 'dd.MM.yyyy HH:mm')}"></td>
+    <td th:text="${tran.profitLoss}"></td>
 
   </tr>
   </tbody>

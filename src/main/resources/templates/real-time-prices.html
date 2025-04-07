@@ -37,6 +37,11 @@
     <input  type="submit"  value="Reset Profile"/>
 </form>
 
+<form th:method="Get"
+      th:action="@{/wallet}">
+    <input  type="submit"  value="View Wallet"/>
+</form>
+
 <script th:src="@{js/real-time-prices.js}"> </script>
 </body>
 </html>
