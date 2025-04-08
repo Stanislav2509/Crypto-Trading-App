@@ -1,14 +1,20 @@
 package com.cryptotrading.Crypto.Trading.App.model.dto;
 
+import jakarta.persistence.Column;
+
+import java.math.BigDecimal;
+
 public class AssetDTO {
-    private double moneyCurrency;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal moneyCurrency;
+    @Column(precision = 10, scale = 2)
     private double profitLoss;
 
-    public double getMoneyCurrency() {
+    public BigDecimal getMoneyCurrency() {
         return moneyCurrency;
     }
 
-    public void setMoneyCurrency(double moneyCurrency) {
+    public void setMoneyCurrency(BigDecimal moneyCurrency) {
         this.moneyCurrency = moneyCurrency;
     }
 

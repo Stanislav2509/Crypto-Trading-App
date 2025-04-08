@@ -21,7 +21,7 @@
   <tbody id="assetTable">
   <tr th:each ="asset : ${assets}">
     <td th:text="${asset.cryptoType.symbol}"></td>
-    <td th:text="${asset.totalQuantity}"></td>
+    <td th:text="${asset.totalQuantity.stripTrailingZeros().toPlainString()}"></td>
     <td th:text="${asset.moneyCurrency}"></td>
     <td th:id="${asset.cryptoType.symbol}"></td>
   </tr>

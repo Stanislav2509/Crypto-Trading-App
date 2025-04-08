@@ -6,11 +6,32 @@
 <body>
 <h2>Buy Details</h2>
 
-
-<p><strong>Receive: </strong> <span th:text="${transaction.receiveCrypto}"></span><strong th:text="${pair}"> </strong></p>
-<p><strong th:text="'Current Price of ' + ${pair}"></strong> <span th:text="${transaction.currCryptoPrice}"></span> USD</p>
-<p><strong>Cost </strong> <span th:text="${transaction.spendMoney}"></span> USD</p>
-
 <a href="/real-time-prices">Home Page</a>
+<p><strong>Receive: </strong> <span th:text="${transaction.receiveCrypto.stripTrailingZeros().toPlainString()}">
+</span><strong th:text="' ' + ${pair}"> </strong></p>
+<p><strong th:text="'Current Price of ' + ${pair}">
+</strong> <span th:text="${transaction.currCryptoPrice.stripTrailingZeros().toPlainString()}"></span> USD</p>
+<p><strong>Cost </strong> <span th:text="${transaction.spendMoney}"></span> USD</p>
+<br>
+<p><strong>Current Balance: </strong> <span th:text="${currBalance}"></span> <strong> USD</strong></p>
+<br>
+
+<p><strong>Current Assets</strong></p>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Crypto Type</th>
+        <th>Total Quantity</th>
+        <th>Money in Currency</th>
+    </tr>
+    </thead>
+    <tbody >
+    <tr th:each ="asset : ${assets}">
+        <td th:text="${asset.cryptoType.symbol}"></td>
+        <td th:text="${asset.totalQuantity.stripTrailingZeros().toPlainString()}"></td>
+        <td th:text="${asset.moneyCurrency}"></td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

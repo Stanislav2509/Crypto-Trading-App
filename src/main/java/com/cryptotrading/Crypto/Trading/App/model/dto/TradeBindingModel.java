@@ -1,11 +1,16 @@
 package com.cryptotrading.Crypto.Trading.App.model.dto;
 
+import jakarta.persistence.Column;
+
+import java.math.BigDecimal;
+
 public class TradeBindingModel {
 
     private String pair;
-
-    private double spend;
-    private double receive;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal spend;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal receive;
 
     public String getPair() {
         return pair;
@@ -15,19 +20,19 @@ public class TradeBindingModel {
         this.pair = pair;
     }
 
-    public double getSpend() {
+    public BigDecimal getSpend() {
         return spend;
     }
 
-    public void setSpend(double spend) {
+    public void setSpend(BigDecimal spend) {
         this.spend = spend;
     }
 
-    public double getReceive() {
+    public BigDecimal getReceive() {
         return receive;
     }
 
-    public void setReceive(double receive) {
+    public void setReceive(BigDecimal receive) {
         this.receive = receive;
     }
 }

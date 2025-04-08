@@ -1,10 +1,12 @@
 package com.cryptotrading.Crypto.Trading.App.model.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,15 +16,21 @@ public class Transaction extends BaseEntity {
     private User user;
     @ManyToOne
     private CryptoType cryptoType;
-    private double receiveCrypto;
-    private double spendCrypto;
-    private  double receiveMoney;
-    private double spendMoney;
-    private double currCryptoPrice;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal receiveCrypto;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal spendCrypto;
+    @Column(precision = 10, scale = 2)
+    private  BigDecimal receiveMoney;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal spendMoney;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal currCryptoPrice;
     private double profitLoss;
     private LocalDateTime dateTime;
     @NotBlank
     private String transactionType;
+
     public User getUser() {
         return user;
     }
@@ -39,44 +47,52 @@ public class Transaction extends BaseEntity {
         this.cryptoType = cryptoType;
     }
 
-    public double getReceiveCrypto() {
+    public BigDecimal getReceiveCrypto() {
         return receiveCrypto;
     }
 
-    public void setReceiveCrypto(double receiveCrypto) {
+    public void setReceiveCrypto(BigDecimal receiveCrypto) {
         this.receiveCrypto = receiveCrypto;
     }
 
-    public double getSpendCrypto() {
+    public BigDecimal getSpendCrypto() {
         return spendCrypto;
     }
 
-    public void setSpendCrypto(double spendCrypto) {
+    public void setSpendCrypto(BigDecimal spendCrypto) {
         this.spendCrypto = spendCrypto;
     }
 
-    public double getReceiveMoney() {
+    public BigDecimal getReceiveMoney() {
         return receiveMoney;
     }
 
-    public void setReceiveMoney(double receiveMoney) {
+    public void setReceiveMoney(BigDecimal receiveMoney) {
         this.receiveMoney = receiveMoney;
     }
 
-    public double getSpendMoney() {
+    public BigDecimal getSpendMoney() {
         return spendMoney;
     }
 
-    public void setSpendMoney(double spendMoney) {
+    public void setSpendMoney(BigDecimal spendMoney) {
         this.spendMoney = spendMoney;
     }
 
-    public double getCurrCryptoPrice() {
+    public BigDecimal getCurrCryptoPrice() {
         return currCryptoPrice;
     }
 
-    public void setCurrCryptoPrice(double currCryptoPrice) {
+    public void setCurrCryptoPrice(BigDecimal currCryptoPrice) {
         this.currCryptoPrice = currCryptoPrice;
+    }
+
+    public double getProfitLoss() {
+        return profitLoss;
+    }
+
+    public void setProfitLoss(double profitLoss) {
+        this.profitLoss = profitLoss;
     }
 
     public LocalDateTime getDateTime() {
@@ -93,13 +109,5 @@ public class Transaction extends BaseEntity {
 
     public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
-    }
-
-    public double getProfitLoss() {
-        return profitLoss;
-    }
-
-    public void setProfitLoss(double profitLoss) {
-        this.profitLoss = profitLoss;
     }
 }

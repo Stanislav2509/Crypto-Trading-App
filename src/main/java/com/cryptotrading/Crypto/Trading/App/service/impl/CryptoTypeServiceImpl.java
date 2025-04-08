@@ -23,7 +23,7 @@ public class CryptoTypeServiceImpl implements CryptoTypeService {
         List<CryptoType> allPairs = cryptoTypeRepository.findAll();
         Map<String, String> pairsPrices = new TreeMap<>();
         for (CryptoType crypto : allPairs){
-            pairsPrices.put(crypto.getSymbol(), crypto.getPrice().toString());
+            pairsPrices.put(crypto.getSymbol(), crypto.getPrice().stripTrailingZeros().toPlainString());
         }
 
         return pairsPrices;

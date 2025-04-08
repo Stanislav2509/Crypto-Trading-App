@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,8 @@ public class User extends BaseEntity {
     @NotBlank
     private String password;
 
-    private double balance;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal balance;
     @Email
     @Column(nullable = false, unique = true)
     private String email;
@@ -55,11 +57,11 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
