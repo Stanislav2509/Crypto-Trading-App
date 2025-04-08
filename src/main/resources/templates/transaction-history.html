@@ -24,17 +24,22 @@
   <tr th:each ="tran : ${transactions}">
     <td th:text="${tran.cryptoType.symbol}"></td>
     <td th:text="${tran.transactionType}"></td>
-    <td th:text="${tran.spendMoney}"></td>
-    <td th:text="${tran.receiveCrypto}"></td>
-    <td th:text="${tran.spendCrypto}"></td>
-    <td th:text="${tran.receiveMoney}"></td>
-    <td th:text="${tran.currCryptoPrice}"></td>
+    <td th:text="${tran.spendMoney != null ? tran.spendMoney : '0'}"></td>
+    <td th:text="${tran.receiveCrypto != null ? tran.receiveCrypto.stripTrailingZeros().toPlainString() : '0'}"></td>
+    <td th:text="${tran.spendCrypto != null ? tran.spendCrypto.stripTrailingZeros().toPlainString() : '0'}"></td>
+    <td th:text="${tran.receiveMoney != null ? tran.receiveMoney : '0'}"></td>
+    <td th:text="${tran.currCryptoPrice != null ? tran.currCryptoPrice.stripTrailingZeros().toPlainString() : '0'}"></td>
     <td th:text="${#temporals.format(tran.dateTime, 'dd.MM.yyyy HH:mm')}"></td>
-    <td th:text="${tran.profitLoss}"></td>
-
+    <td th:id = "profitLoss" th:text="${tran.profitLoss}"></td>
   </tr>
   </tbody>
 </table>
-
+<script>
+    document.querySelectorAll("#profitLoss").forEach(function (el) {
+        let number = parseFloat(el.textContent);
+        let roundedNumber = number.toFixed(2);
+        el.innerText = roundedNumber;
+    });
+</script>
 </body>
 </html>

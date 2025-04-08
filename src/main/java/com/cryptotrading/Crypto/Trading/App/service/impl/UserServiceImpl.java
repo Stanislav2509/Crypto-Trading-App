@@ -5,6 +5,7 @@ import com.cryptotrading.Crypto.Trading.App.model.entity.Asset;
 import com.cryptotrading.Crypto.Trading.App.model.entity.CryptoType;
 import com.cryptotrading.Crypto.Trading.App.model.entity.Transaction;
 import com.cryptotrading.Crypto.Trading.App.model.entity.User;
+import com.cryptotrading.Crypto.Trading.App.model.enums.TransactionType;
 import com.cryptotrading.Crypto.Trading.App.repo.AssetRepository;
 import com.cryptotrading.Crypto.Trading.App.repo.CryptoTypeRepository;
 import com.cryptotrading.Crypto.Trading.App.repo.TransactionRepository;
@@ -13,6 +14,7 @@ import com.cryptotrading.Crypto.Trading.App.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -51,22 +53,22 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userRegisterBindingModel.getEmail());
         user.setPassword(passwordEncoder.encode(userRegisterBindingModel.getPassword()));
         user.setPhoneNumber(userRegisterBindingModel.getPhoneNumber());
-        user.setBalance(10000.00);
+        user.setBalance(new BigDecimal( "10000.00"));
         userRepository.save(user);
 
         return true;
     }
     @Override
-    public Optional<Transaction> buyCrypto(String email, String pair, double spend, double quantity) {
+    public Optional<Transaction> buyCrypto(String email, String pair, BigDecimal spend, BigDecimal quantity) {
         User user = findByEmail(email);
 
         if(user == null){
            return Optional.empty();
         }
 
-        double currentUserBalance = user.getBalance();
+        BigDecimal currentUserBalance = user.getBalance();
 
-        if ( currentUserBalance < spend) return Optional.empty();
+        if ( currentUserBalance.compareTo(spend) < 0) return Optional.empty();
 
         Optional<CryptoType> cryptoOpt = cryptoTypeRepository.findBySymbol(pair.replace("-", "/"));
         CryptoType cryptoType;
@@ -75,11 +77,11 @@ public class UserServiceImpl implements UserService {
         }
         cryptoType = cryptoOpt.get();
 
-        user.setBalance(currentUserBalance - spend);
+        user.setBalance(currentUserBalance.subtract(spend));
 
         Transaction transaction = new Transaction();
         transaction.setUser(user);
-        transaction.setTransactionType("Buy");
+        transaction.setTransactionType(TransactionType.BUY.getDisplayValue());
         transaction.setSpendMoney(spend);
         transaction.setReceiveCrypto(quantity);
         transaction.setDateTime(LocalDateTime.now());
@@ -91,10 +93,18 @@ public class UserServiceImpl implements UserService {
 
         Optional<Asset> assetOpt = assetRepository.findByCryptoTypeAndUser(cryptoType,user);
         Asset asset = assetOpt.orElseGet(Asset::new);
-        asset.setTotalQuantity(asset.getTotalQuantity()+quantity);
+        if (asset.getTotalQuantity() == null) {
+            asset.setTotalQuantity(BigDecimal.ZERO.add(quantity));
+        } else {
+            asset.setTotalQuantity(asset.getTotalQuantity().add(quantity));
+        }
         asset.setUser(user);
         asset.setCryptoType(cryptoType);
-        asset.setMoneyCurrency(asset.getMoneyCurrency()+spend);
+        if (asset.getMoneyCurrency() == null) {
+            asset.setMoneyCurrency(BigDecimal.ZERO.add(spend));
+        } else {
+            asset.setMoneyCurrency(asset.getMoneyCurrency().add(spend));
+        }
         asset.setPriceDuringPurchase(cryptoType.getPrice());
         assetRepository.save(asset);
 
@@ -102,14 +112,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public double getBalance(String email) {
+    public BigDecimal getBalance(String email) {
         User user = findByEmail(email);
         return  user.getBalance();
     }
 
     @Override
-    public double getQuantityFromPair(String email, String pair) {
-        double quantity = 0;
+    public BigDecimal getQuantityFromPair(String email, String pair) {
+        BigDecimal quantity = new BigDecimal("0");
         Optional<CryptoType> cryptoOpt = cryptoTypeRepository.findBySymbol(pair.replace("-", "/"));
         CryptoType cryptoType = new CryptoType();
         if(cryptoOpt.isPresent()){
@@ -126,17 +136,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<Transaction> sellCrypto(String email, String pair, double spend, double receiveMoney) {
+    public Optional<Transaction> sellCrypto(String email, String pair, BigDecimal spend, BigDecimal receiveMoney) {
        User user = findByEmail(email);
 
         if(user == null){
             return Optional.empty();
         }
 
-        double currentUserBalance = user.getBalance();
-        double currentQuantityFromPair = getQuantityFromPair(email, pair.replace("-","/"));
+        BigDecimal currentUserBalance = user.getBalance();
+        BigDecimal currentQuantityFromPair = getQuantityFromPair(email, pair.replace("-","/"));
 
-        if ( currentQuantityFromPair < spend) return Optional.empty();
+        if ( currentQuantityFromPair.compareTo(spend) < 0) return Optional.empty();
 
         Optional<CryptoType> cryptoOpt = cryptoTypeRepository.findBySymbol(pair.replace("-", "/"));
         CryptoType cryptoType;
@@ -150,7 +160,7 @@ public class UserServiceImpl implements UserService {
 
         Transaction transaction = new Transaction();
         transaction.setUser(user);
-        transaction.setTransactionType("Sell");
+        transaction.setTransactionType(TransactionType.SELL.getDisplayValue());
         transaction.setDateTime(LocalDateTime.now());
         transaction.setCryptoType(cryptoType);
         transaction.setSpendCrypto(spend);
@@ -159,18 +169,18 @@ public class UserServiceImpl implements UserService {
         transaction.setProfitLoss(asset.getProfitLoss());
 
         transactionRepository.save(transaction);
-        user.setBalance(currentUserBalance+receiveMoney);
+        user.setBalance(currentUserBalance.add(receiveMoney));
         userRepository.save(user);
 
 
-        double remainingQuantity = asset.getTotalQuantity()- spend;
-        if(remainingQuantity==0){
+        BigDecimal remainingQuantity = asset.getTotalQuantity().subtract(spend);
+        if(remainingQuantity.compareTo(new BigDecimal("0")) == 0){
             assetRepository.delete(asset);
         }else {
             asset.setTotalQuantity(remainingQuantity);
             asset.setUser(user);
             asset.setCryptoType(cryptoType);
-            asset.setMoneyCurrency(asset.getMoneyCurrency() - (cryptoType.getPrice()*spend));
+            asset.setMoneyCurrency(asset.getMoneyCurrency().subtract(cryptoType.getPrice().multiply(spend)));
             assetRepository.save(asset);
         }
 
@@ -196,7 +206,7 @@ public class UserServiceImpl implements UserService {
         assetRepository.deleteAll(assets);
         List<Transaction> transactions = transactionRepository.findAllByUser(user);
         transactionRepository.deleteAll(transactions);
-        user.setBalance(10000);
+        user.setBalance(new BigDecimal( "10000"));
         userRepository.save(user);
     }
 }

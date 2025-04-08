@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -43,11 +44,11 @@ public class CandleDataServiceImpl implements CandleDataService {
 
             for (JsonNode node : data) {
                 CandleData candle = new CandleData();
-                candle.setTime(node.get(0).asLong());
-                candle.setOpen(node.get(1).asDouble());
-                candle.setHigh(node.get(2).asDouble());
-                candle.setLow(node.get(3).asDouble());
-                candle.setClose(node.get(4).asDouble());
+                candle.setTime(BigDecimal.valueOf(node.get(0).asDouble()));
+                candle.setOpen(BigDecimal.valueOf(node.get(1).asDouble()));
+                candle.setHigh(BigDecimal.valueOf(node.get(2).asDouble()));
+                candle.setLow(BigDecimal.valueOf(node.get(3).asDouble()));
+                candle.setClose(BigDecimal.valueOf(node.get(4).asDouble()));
                 result.add(candle);
             }
 

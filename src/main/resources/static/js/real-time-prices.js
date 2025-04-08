@@ -10,8 +10,8 @@
                 let rows = document.querySelectorAll("#priceTable tr");
                 for (let row of rows) {
                     if (row.cells[0].innerText === pair) {
-                        row.cells[1].innerText = price;
-                    }
+                        row.cells[1].innerText = parseFloat(price).toFixed(8).replace(/\.?0+$/, '');
+                      }
                 }
             }
         });

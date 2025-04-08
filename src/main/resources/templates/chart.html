@@ -8,9 +8,9 @@
 </head>
 <body>
 
-<h2 th:text="${pair}"></h2>
+<h2 th:text="${name} + ' ' + ${pair}"></h2>
 
-<form method="get" th:action="@{/chart/{pair}(pair=${pair.replace('/', '-')})}">
+<form method="get" th:action="@{/chart/{pair}(pair=${pair})}">
     <label for="interval">Избери интервал:</label>
     <select name="interval" id="interval">
         <option value="1" th:selected="${interval == 1}">1 минута</option>
@@ -61,28 +61,36 @@
     }, 100);
 </script>
 
-<form method="post" th:action="@{/buy}" th:object="${tradeBindingModel}">
+<div>
+    <button type="button" onclick="showBuyForm()">Buy</button>
+    <button type="button" onclick="showSellForm()">Sell</button>
+</div>
+
+<div id="buyForm" style="display: block;">
+    <form method="post" th:action="@{/buy}" th:object="${tradeBindingModel}">
     <h2 th:text="'Buy ' + ${pair}"></h2>
     <input type="hidden" th:field="*{pair}" />
 
-    <label for="spend">Spend USD </label>
+    <label>Spend USD </label>
     <input type="number" th:field="*{spend}" step="0.01" min="0" th:attr="max=${userBalance}"
            oninput="validateSpendUsd()" id="spendUsd" name="spend" required />
     <button type="button" onclick="setMaxUsd()">MAX</button>
     <br/>
 
-    <label for="receive" th:text="'Receive ' + ${pair}"></label>
+    <label th:text="'Receive ' + ${pair}"></label>
     <input type="text" id="receiveCrypto" name="receive" readonly />
 
     <br/>
     <button type="submit">Buy</button>
-</form>
+    </form>
+</div>
 
-<form method="post" th:action="@{/sell}" th:object = "${tradeBindingModel}">
+<div id="sellForm" style="display: none;">
+    <form method="post" th:action="@{/sell}" th:object = "${tradeBindingModel}">
     <h2 th:text="'Sell ' + ${pair}"></h2>
     <input type="hidden" th:field="*{pair}" />
 
-    <label for="spend" th:text="'Spend ' + ${pair}"></label>
+    <label  th:text="'Spend ' + ${pair}"></label>
     <input type="number" th:field="*{spend}" step="any" min="0" th:attr="max=${quantityCrypto}"
            oninput="validateSpendCrypto()" id="spendCrypto" name="spend"  required />
     <button type="button" onclick="setMaxCrypto()">MAX</button>
@@ -90,12 +98,25 @@
            th:errors="*{spend}" ></small>
     <br/>
 
-    <label for="receive">Receive USD </label>
+    <label >Receive USD </label>
     <input type="text" id="receiveUsd" name="receive" readonly />
 
     <br/>
     <button type="submit">Sell</button>
-</form>
+    </form>
+</div>
+
+<script>
+    function showBuyForm() {
+        document.getElementById("buyForm").style.display = "block";
+        document.getElementById("sellForm").style.display = "none";
+    }
+
+    function showSellForm() {
+        document.getElementById("sellForm").style.display = "block";
+        document.getElementById("buyForm").style.display = "none";
+    }
+</script>
 
 <script>
     const currentPrice = [[${currentPrice}]];

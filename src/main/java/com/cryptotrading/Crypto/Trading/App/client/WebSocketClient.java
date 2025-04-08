@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.net.http.WebSocket;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class WebSocketClient implements WebSocket.Listener {
     private final CryptoTypeRepository cryptoTypeRepository;
     private final AssetRepository assetRepository;
     private final UserRepository userRepository;
-    private final Map<String, String> currentPrices = new ConcurrentHashMap<>();
+    private final Map<String, BigDecimal> currentPrices = new ConcurrentHashMap<>();
     private final Map<String, AssetDTO> assetPrice = new ConcurrentHashMap<>();
     private Long currentUserId;
 
@@ -56,19 +57,22 @@ public class WebSocketClient implements WebSocket.Listener {
                 if ("XBT/USD".equals(pair)) {
                     pair = "BTC/USD";
                 }
-                String price = tradesArray.get(0).get(0).asText();
+                if ("XDG/USD".equals(pair)) {
+                    pair = "DOGE/USD";
+                }
+                BigDecimal price = new BigDecimal(tradesArray.get(0).get(0).asText()) ;
 
                 currentPrices.put(pair, price);
 
                 Optional<CryptoType> cryptoOpt = cryptoTypeRepository.findBySymbol(pair);
                 CryptoType cryptoType = cryptoOpt.orElseGet(CryptoType::new);
                 cryptoType.setSymbol(pair);
-                cryptoType.setPrice(Double.parseDouble(price));
+                cryptoType.setPrice(price);
                 cryptoTypeRepository.save(cryptoType);
 
                 List<Asset> assets = assetRepository.findAllByCryptoType(cryptoType);
                 for(Asset asset : assets){
-                    double x = asset.getTotalQuantity() * Double.parseDouble(price);
+                    BigDecimal x = asset.getTotalQuantity().multiply(price);
 
                     asset.setMoneyCurrency(x);
                     assetRepository.save(asset);
@@ -83,7 +87,8 @@ public class WebSocketClient implements WebSocket.Listener {
                 if(assetOpt.isPresent()){
                     Asset asset  = assetOpt.get();
 
-                    double profitLoss = (cryptoType.getPrice() - asset.getPriceDuringPurchase()) * asset.getTotalQuantity();
+                    double profitLoss = (cryptoType.getPrice().subtract(asset.getPriceDuringPurchase()))
+                            .multiply(asset.getTotalQuantity()).doubleValue();
                     asset.setProfitLoss(profitLoss);
                     asset.setPriceNow(cryptoType.getPrice());
                     assetRepository.save(asset);

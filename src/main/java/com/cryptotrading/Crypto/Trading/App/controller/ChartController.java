@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 
@@ -35,18 +36,19 @@ public class ChartController {
                                  @ModelAttribute("tradeBindingModel") TradeBindingModel tradeBindingModel) {
 
         List<CandleData> candles = candleDataService.fetchCandles(pair, interval);
-        model.addAttribute("pair", pair.replace("-", "/"));
+        model.addAttribute("pair", pair);
         model.addAttribute("interval", interval);
         model.addAttribute("candles", candles);
 
-        double userBalance = userService.getBalance(principal.getName());
+        BigDecimal userBalance = userService.getBalance(principal.getName());
         CryptoType cryptoType = cryptoTypeService.findBySymbol(pair);
-        double lastPrice = cryptoType.getPrice();
-        model.addAttribute("pair", pair);
+        BigDecimal lastPrice = cryptoType.getPrice();
+        String name = cryptoType.getName();
         model.addAttribute("currentPrice", lastPrice);
         model.addAttribute("userBalance", userBalance);
+        model.addAttribute("name", name);
 
-        double quantityFromPair = userService.getQuantityFromPair(principal.getName(), pair);
+        BigDecimal quantityFromPair = userService.getQuantityFromPair(principal.getName(), pair);
         model.addAttribute("quantityCrypto", quantityFromPair);
 
         return "chart";

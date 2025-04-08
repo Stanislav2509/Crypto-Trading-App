@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -18,7 +19,8 @@ public class CryptoType extends BaseEntity {
     private String name;
     @Column(nullable = false, unique = true)
     private String symbol;
-    private Double price;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal price;
     @OneToMany(mappedBy = "cryptoType")
     private List<Transaction> transactions;
     @OneToMany(mappedBy = "cryptoType")
@@ -40,11 +42,11 @@ public class CryptoType extends BaseEntity {
         this.symbol = symbol;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

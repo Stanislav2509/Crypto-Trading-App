@@ -1,53 +1,59 @@
 package com.cryptotrading.Crypto.Trading.App.model.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Column;
+
+import java.math.BigDecimal;
 
 
 public class CandleData {
-    private long time;
-    private double open;
-    private double high;
-    private double low;
-    private double close;
+    @Column(precision = 4, scale = 2)
+    private BigDecimal time;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal open;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal high;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal low;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal close;
 
-    public long getTime() {
+    public BigDecimal getTime() {
         return time;
     }
 
-    public void setTime(long time) {
+    public void setTime(BigDecimal time) {
         this.time = time;
     }
 
-    public double getOpen() {
+    public BigDecimal getOpen() {
         return open;
     }
 
-    public void setOpen(double open) {
+    public void setOpen(BigDecimal open) {
         this.open = open;
     }
 
-    public double getHigh() {
+    public BigDecimal getHigh() {
         return high;
     }
 
-    public void setHigh(double high) {
+    public void setHigh(BigDecimal high) {
         this.high = high;
     }
 
-    public double getLow() {
+    public BigDecimal getLow() {
         return low;
     }
 
-    public void setLow(double low) {
+    public void setLow(BigDecimal low) {
         this.low = low;
     }
 
-    public double getClose() {
+    public BigDecimal getClose() {
         return close;
     }
 
-    public void setClose(double close) {
+    public void setClose(BigDecimal close) {
         this.close = close;
     }
 }

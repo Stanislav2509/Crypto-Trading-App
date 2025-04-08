@@ -1,18 +1,24 @@
 package com.cryptotrading.Crypto.Trading.App.model.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
+import java.math.BigDecimal;
 
 
 @Entity
 @Table(name = "assets")
 public class Asset extends BaseEntity{
-
-    private double totalQuantity;
-    private double moneyCurrency;
-    private double priceDuringPurchase;
-    private double priceNow;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal totalQuantity;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal moneyCurrency;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal priceDuringPurchase;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal priceNow;
     private double profitLoss;
 
     @ManyToOne
@@ -20,12 +26,44 @@ public class Asset extends BaseEntity{
     @ManyToOne
     private CryptoType cryptoType;
 
-    public double getMoneyCurrency() {
+    public BigDecimal getTotalQuantity() {
+        return totalQuantity;
+    }
+
+    public void setTotalQuantity(BigDecimal totalQuantity) {
+        this.totalQuantity = totalQuantity;
+    }
+
+    public BigDecimal getMoneyCurrency() {
         return moneyCurrency;
     }
 
-    public void setMoneyCurrency(double moneyCurrency) {
+    public void setMoneyCurrency(BigDecimal moneyCurrency) {
         this.moneyCurrency = moneyCurrency;
+    }
+
+    public BigDecimal getPriceDuringPurchase() {
+        return priceDuringPurchase;
+    }
+
+    public void setPriceDuringPurchase(BigDecimal priceDuringPurchase) {
+        this.priceDuringPurchase = priceDuringPurchase;
+    }
+
+    public BigDecimal getPriceNow() {
+        return priceNow;
+    }
+
+    public void setPriceNow(BigDecimal priceNow) {
+        this.priceNow = priceNow;
+    }
+
+    public double getProfitLoss() {
+        return profitLoss;
+    }
+
+    public void setProfitLoss(double profitLoss) {
+        this.profitLoss = profitLoss;
     }
 
     public User getUser() {
@@ -42,37 +80,5 @@ public class Asset extends BaseEntity{
 
     public void setCryptoType(CryptoType cryptoType) {
         this.cryptoType = cryptoType;
-    }
-
-    public double getTotalQuantity() {
-        return totalQuantity;
-    }
-
-    public void setTotalQuantity(double totalQuantity) {
-        this.totalQuantity = totalQuantity;
-    }
-
-    public double getPriceDuringPurchase() {
-        return priceDuringPurchase;
-    }
-
-    public void setPriceDuringPurchase(double priceDuringPurchase) {
-        this.priceDuringPurchase = priceDuringPurchase;
-    }
-
-    public double getPriceNow() {
-        return priceNow;
-    }
-
-    public void setPriceNow(double priceNow) {
-        this.priceNow = priceNow;
-    }
-
-    public double getProfitLoss() {
-        return profitLoss;
-    }
-
-    public void setProfitLoss(double profitLoss) {
-        this.profitLoss = profitLoss;
     }
 }
