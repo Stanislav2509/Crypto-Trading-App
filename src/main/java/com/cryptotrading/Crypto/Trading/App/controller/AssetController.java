@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
@@ -49,13 +50,7 @@ public class AssetController {
         BigDecimal quantity = tradeBindingModel.getReceive();
 
         Optional<Transaction> transaction = userService.buyCrypto(email, pair, spend, quantity);
-        long transactionID = 0;
-        if (transaction.isPresent()) {
-            redirectAttributes.addFlashAttribute("message", "Покупката е успешна!");
-            transactionID = transaction.get().getId();
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Проблем с покупката");
-        }
+        long transactionID = transaction.isPresent() ? transaction.get().getId(): 0;
 
         return "redirect:/buy-details/" + transactionID;
     }
@@ -75,45 +70,21 @@ public class AssetController {
 
         Optional<Transaction> transaction = userService.sellCrypto(email, pair, spend, receiveMoney);
 
-        long transactionID = 0;
-        if (transaction.isPresent()) {
-            redirectAttributes.addFlashAttribute("message", "Продажбата е успешна!");
-            transactionID = transaction.get().getId();
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Проблем с продажбата");
-        }
+        long transactionID = transaction.isPresent() ? transaction.get().getId(): 0;
 
         return "redirect:/sell-details/" + transactionID;
     }
 
     @GetMapping("/buy-details/{id}")
-    public String buyDetails(@PathVariable Long id, Model model, Principal principal){
-        Transaction transaction = transactionService.findById(id);
-        String pair = transaction.getCryptoType().getSymbol();
-        List<Asset>  assets = assetService.findAllByUserEmail(principal.getName());
-        User user = userService.findByEmail(principal.getName());
-
-        model.addAttribute("transaction", transaction);
-        model.addAttribute("pair", pair);
-        model.addAttribute("user", user);
-        model.addAttribute("assets", assets);
-
-        return "buy-details";
+    public ModelAndView buyDetails(@PathVariable Long id, Model model, Principal principal){
+        String email = principal.getName();
+        return getDealDetails(id, email , "buy-details");
     }
 
     @GetMapping("/sell-details/{id}")
-    public String sellDetails(@PathVariable Long id, Model model, Principal principal){
-        Transaction transaction = transactionService.findById(id);
-        String pair = transaction.getCryptoType().getSymbol();
-        User user = userService.findByEmail(principal.getName());
-        List<Asset>  assets = assetService.findAllByUserEmail(principal.getName());
-
-        model.addAttribute("transaction", transaction);
-        model.addAttribute("pair", pair);
-        model.addAttribute("user", user);
-        model.addAttribute("assets", assets);
-
-        return "sell-details";
+    public ModelAndView sellDetails(@PathVariable Long id, Model model, Principal principal){
+        String email = principal.getName();
+        return getDealDetails(id, email , "sell-details");
     }
 
     @GetMapping("/wallet")
@@ -125,5 +96,20 @@ public class AssetController {
         model.addAttribute("assets", assets);
         model.addAttribute("user", user);
         return "wallet";
+    }
+
+    private ModelAndView getDealDetails(Long id, String email, String template){
+        ModelAndView model = new ModelAndView(template);
+        Transaction transaction = transactionService.findById(id);
+        String pair = transaction.getCryptoType().getSymbol();
+        List<Asset>  assets = assetService.findAllByUserEmail(email);
+        User user = userService.findByEmail(email);
+
+        model.addObject("transaction", transaction);
+        model.addObject("pair", pair);
+        model.addObject("user", user);
+        model.addObject("assets", assets);
+
+        return model;
     }
 }

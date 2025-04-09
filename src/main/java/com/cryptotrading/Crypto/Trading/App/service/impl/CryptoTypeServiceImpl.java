@@ -32,9 +32,6 @@ public class CryptoTypeServiceImpl implements CryptoTypeService {
     @Override
     public CryptoType findBySymbol(String pair) {
         Optional<CryptoType> cryptoType = cryptoTypeRepository.findBySymbol(pair.replace("-","/"));
-        if(cryptoType.isPresent()){
-            return cryptoType.get();
-        }
-        return null;
+        return cryptoType.orElse(null);
     }
 }
