@@ -91,5 +91,5 @@ function validateSpendCrypto() {
     function calculateReceiveUsd() {
        const spend = parseFloat(document.getElementById("spendCrypto").value);
         const receive = spend * currentPrice;
-        document.getElementById("receiveUsd").value = isNaN(receive) ? '' : receive.toFixed(6);
+        document.getElementById("receiveUsd").value = isNaN(receive) ? '' : receive.toFixed(2);
     }

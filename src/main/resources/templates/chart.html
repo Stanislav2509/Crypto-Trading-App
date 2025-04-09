@@ -37,7 +37,6 @@
 
 <div id="buyForm" style="display: block;">
     <form method="post" th:action="@{/buy}" th:object="${tradeBindingModel}">
-    <!-- <h2 th:text="'Buy ' + ${pair}"></h2> -->
     <input type="hidden" th:field="*{pair}" />
 
     <label>Spend USD </label>
@@ -56,7 +55,6 @@
 
 <div id="sellForm" style="display: none;">
     <form method="post" th:action="@{/sell}" th:object = "${tradeBindingModel}">
-    <!-- <h2 th:text="'Sell ' + ${pair}"></h2> -->
     <input type="hidden" th:field="*{pair}" />
 
     <label  th:text="'Spend ' + ${pair}"></label>
