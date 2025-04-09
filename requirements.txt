@@ -6,9 +6,9 @@
 6. Thymeleaf Extras for Spring Security
 7. MySQL Connector
 8. Jackson Mapper
-12. Spring Boot WebFlux
-14. Java WebSocket
-15. Spring Boot WebSocket
-17. Jackson Databind
-18. Webjars STOMP WebSocket
-19. Webjars SockJS Client
+9. Spring Boot WebFlux
+10. Java WebSocket
+11. Spring Boot WebSocket
+12. Jackson Databind
+13. Webjars STOMP WebSocket
+14. Webjars SockJS Client
