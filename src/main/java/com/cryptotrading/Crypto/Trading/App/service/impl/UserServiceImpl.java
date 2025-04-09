@@ -11,6 +11,7 @@ import com.cryptotrading.Crypto.Trading.App.repo.CryptoTypeRepository;
 import com.cryptotrading.Crypto.Trading.App.repo.TransactionRepository;
 import com.cryptotrading.Crypto.Trading.App.repo.UserRepository;
 import com.cryptotrading.Crypto.Trading.App.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private static final BigDecimal INITIAL_BALANCE = BigDecimal.valueOf(1000.00);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TransactionRepository transactionRepository;
@@ -47,13 +49,14 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
+
         User user = new User();
         user.setFirstName(userRegisterBindingModel.getFirstName());
         user.setLastName(userRegisterBindingModel.getLastName());
         user.setEmail(userRegisterBindingModel.getEmail());
         user.setPassword(passwordEncoder.encode(userRegisterBindingModel.getPassword()));
         user.setPhoneNumber(userRegisterBindingModel.getPhoneNumber());
-        user.setBalance(new BigDecimal( "10000.00"));
+        user.setBalance(INITIAL_BALANCE);
         userRepository.save(user);
 
         return true;
@@ -71,11 +74,10 @@ public class UserServiceImpl implements UserService {
         if ( currentUserBalance.compareTo(spend) < 0) return Optional.empty();
 
         Optional<CryptoType> cryptoOpt = cryptoTypeRepository.findBySymbol(pair.replace("-", "/"));
-        CryptoType cryptoType;
-        if(cryptoOpt.isEmpty()){
+        CryptoType cryptoType = checkCryptoTypeAvailable(cryptoOpt);
+        if(cryptoType == null){
             return Optional.empty();
         }
-        cryptoType = cryptoOpt.get();
 
         user.setBalance(currentUserBalance.subtract(spend));
 
@@ -121,10 +123,7 @@ public class UserServiceImpl implements UserService {
     public BigDecimal getQuantityFromPair(String email, String pair) {
         BigDecimal quantity = new BigDecimal("0");
         Optional<CryptoType> cryptoOpt = cryptoTypeRepository.findBySymbol(pair.replace("-", "/"));
-        CryptoType cryptoType = new CryptoType();
-        if(cryptoOpt.isPresent()){
-            cryptoType = cryptoOpt.get();
-        }
+        CryptoType cryptoType = checkCryptoTypeAvailable(cryptoOpt);
 
         User user = findByEmail(email);
 
@@ -149,11 +148,11 @@ public class UserServiceImpl implements UserService {
         if ( currentQuantityFromPair.compareTo(spend) < 0) return Optional.empty();
 
         Optional<CryptoType> cryptoOpt = cryptoTypeRepository.findBySymbol(pair.replace("-", "/"));
-        CryptoType cryptoType;
-        if(cryptoOpt.isEmpty()){
+        CryptoType cryptoType = checkCryptoTypeAvailable(cryptoOpt);
+
+        if(cryptoType == null){
             return Optional.empty();
         }
-        cryptoType = cryptoOpt.get();
 
         Optional<Asset> assetOpt = assetRepository.findByCryptoTypeAndUser(cryptoType,user);
         Asset asset = assetOpt.orElseGet(Asset::new);
@@ -191,12 +190,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByEmail(String email) {
         Optional<User> userOpt = userRepository.findByEmail(email);
-
-        User user = new User();
-        if(userOpt.isPresent()){
-            user= userOpt.get();
-        }
-        return user;
+        return checkUserAvailable(userOpt);
     }
 
     @Override
@@ -206,7 +200,14 @@ public class UserServiceImpl implements UserService {
         assetRepository.deleteAll(assets);
         List<Transaction> transactions = transactionRepository.findAllByUser(user);
         transactionRepository.deleteAll(transactions);
-        user.setBalance(new BigDecimal( "10000"));
+        user.setBalance(INITIAL_BALANCE);
         userRepository.save(user);
+    }
+
+    private User checkUserAvailable(Optional<User> user){
+        return user.orElse(null);
+    }
+    private CryptoType checkCryptoTypeAvailable(Optional<CryptoType> cryptoType){
+        return cryptoType.orElse(null);
     }
 }
