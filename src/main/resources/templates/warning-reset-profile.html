@@ -3,17 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Warning</title>
+    <link th:href="@{/css/nav-style.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/warning-reset-profile-style.css}">
 </head>
 <body>
-<h1>WARNING!!!</h1>
-<h2>Are you sure you want to rest your profile?</h2>
-<form th:method="Delete"
-      th:action="@{/reset-profile}">
-  <input  type="submit"  value="YES"/>
-</form>
-<form th:method="Get"
-      th:action="@{/real-time-prices}">
-  <input  type="submit"  value="NO"/>
-</form>
-</body>
+<div th:replace="~{fragments/navigation}"></div>
+  
+<main>
+  <div class="content-wrapper">
+     <h1>WARNING!!!</h1>
+  <h2>Are you sure you want to reset your profile?</h2>
+    <div class="button-container">
+      <form th:method="Delete" th:action="@{/reset-profile}">
+        <input type="submit" value="YES"/>
+      </form>
+      <form th:method="Get" th:action="@{/real-time-prices}">
+        <input type="submit" value="NO"/>
+      </form>
+    </div>
+  </div>
+  <img class="img" src="/images/warning.png" alt="Warning Image">
+</main>
+  </body>
 </html>

@@ -3,6 +3,7 @@ package com.cryptotrading.Crypto.Trading.App.controller;
 import com.cryptotrading.Crypto.Trading.App.model.dto.TradeBindingModel;
 import com.cryptotrading.Crypto.Trading.App.model.entity.Asset;
 import com.cryptotrading.Crypto.Trading.App.model.entity.Transaction;
+import com.cryptotrading.Crypto.Trading.App.model.entity.User;
 import com.cryptotrading.Crypto.Trading.App.service.AssetService;
 import com.cryptotrading.Crypto.Trading.App.service.TransactionService;
 import com.cryptotrading.Crypto.Trading.App.service.UserService;
@@ -89,11 +90,12 @@ public class AssetController {
     public String buyDetails(@PathVariable Long id, Model model, Principal principal){
         Transaction transaction = transactionService.findById(id);
         String pair = transaction.getCryptoType().getSymbol();
-        BigDecimal balance = userService.getBalance(principal.getName());
+        List<Asset>  assets = assetService.findAllByUserEmail(principal.getName());
+        User user = userService.findByEmail(principal.getName());
+
         model.addAttribute("transaction", transaction);
         model.addAttribute("pair", pair);
-        model.addAttribute("currBalance", balance);
-        List<Asset>  assets = assetService.findAllByUserEmail(principal.getName());
+        model.addAttribute("user", user);
         model.addAttribute("assets", assets);
 
         return "buy-details";
@@ -103,12 +105,12 @@ public class AssetController {
     public String sellDetails(@PathVariable Long id, Model model, Principal principal){
         Transaction transaction = transactionService.findById(id);
         String pair = transaction.getCryptoType().getSymbol();
-        model.addAttribute("transaction", transaction);
-        BigDecimal balance = userService.getBalance(principal.getName());
-        model.addAttribute("pair", pair);
-        model.addAttribute("currBalance", balance);
-
+        User user = userService.findByEmail(principal.getName());
         List<Asset>  assets = assetService.findAllByUserEmail(principal.getName());
+
+        model.addAttribute("transaction", transaction);
+        model.addAttribute("pair", pair);
+        model.addAttribute("user", user);
         model.addAttribute("assets", assets);
 
         return "sell-details";
@@ -117,10 +119,11 @@ public class AssetController {
     @GetMapping("/wallet")
     public String getWallet(Principal principal, Model model){
         String email = principal.getName();
-        BigDecimal balanceUSD = userService.getBalance(email);
         List<Asset> assets = assetService.findAllByUserEmail(email);
-        model.addAttribute("balanceUSD", balanceUSD);
+        User user = userService.findByEmail(principal.getName());
+
         model.addAttribute("assets", assets);
+        model.addAttribute("user", user);
         return "wallet";
     }
 }

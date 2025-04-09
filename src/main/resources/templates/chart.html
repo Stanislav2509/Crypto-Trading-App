@@ -4,24 +4,82 @@
     <meta charset="UTF-8">
     <title th:text="'Candlestick Chart for ' + ${pair}">Chart</title>
     <script src="https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js"></script>
-
+    <link th:href="@{/css/nav-style.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/chart-style.css}">
 </head>
 <body>
-
-<h2 th:text="${name} + ' ' + ${pair}"></h2>
+<div th:replace="~{fragments/navigation}"></div>
+    <main>
+        <div class="intro">
+    <h2 th:text="${name} + ' ' + ${pair}"></h2>
 
 <form method="get" th:action="@{/chart/{pair}(pair=${pair})}">
-    <label for="interval">Избери интервал:</label>
+    <label class="interval" for="interval">Избери интервал:</label>
     <select name="interval" id="interval">
         <option value="1" th:selected="${interval == 1}">1 минута</option>
         <option value="5" th:selected="${interval == 5}">5 минути</option>
         <option value="60" th:selected="${interval == 60}">1 час</option>
         <option value="1440" th:selected="${interval == 1440}">1 ден</option>
     </select>
-    <button type="submit">Покажи</button>
+    <button class="btn-show" type="submit">Покажи</button>
 </form>
+</div>
 
-<div id="chart" style="width: 100%; height: 500px;"></div>
+<div class="chart-trade">
+
+    <div id="chart" style=" height: 500px;"></div>
+
+    <div class="trade">
+    <div class="btn">
+    <button class="btn-buy" type="button" onclick="showBuyForm()">Buy</button>
+    <button class="btn-sell" type="button" onclick="showSellForm()">Sell</button>
+    </div>
+
+<div id="buyForm" style="display: block;">
+    <form method="post" th:action="@{/buy}" th:object="${tradeBindingModel}">
+    <!-- <h2 th:text="'Buy ' + ${pair}"></h2> -->
+    <input type="hidden" th:field="*{pair}" />
+
+    <label>Spend USD </label>
+    <input type="number" th:field="*{spend}" step="0.01" min="0" th:attr="max=${userBalance}"
+           oninput="validateSpendUsd()" id="spendUsd" name="spend" required />
+    <button class="btn-max" type="button" onclick="setMaxUsd()">MAX</button>
+    <br/>
+
+    <label th:text="'Receive ' + ${pair}"></label>
+    <input type="text" id="receiveCrypto" name="receive" readonly />
+
+    <br/>
+    <button class="buy-btn" type="submit">Buy</button>
+    </form>
+</div>
+
+<div id="sellForm" style="display: none;">
+    <form method="post" th:action="@{/sell}" th:object = "${tradeBindingModel}">
+    <!-- <h2 th:text="'Sell ' + ${pair}"></h2> -->
+    <input type="hidden" th:field="*{pair}" />
+
+    <label  th:text="'Spend ' + ${pair}"></label>
+    <input type="number" th:field="*{spend}" step="any" min="0" th:attr="max=${quantityCrypto}"
+           oninput="validateSpendCrypto()" id="spendCrypto" name="spend"  required />
+    <button class="btn-max" type="button" onclick="setMaxCrypto()">MAX</button>
+    <small th:if="${#fields.hasErrors('spend')}"
+           th:errors="*{spend}" ></small>
+    <br/>
+
+    <label >Receive USD </label>
+    <input type="text" id="receiveUsd" name="receive" readonly />
+
+    <br/>
+    <button class="sell-btn" type="submit">Sell</button>
+    </form>
+</div>
+    </div>
+   
+</div>
+    </main>
+
+
 
 <script th:inline="javascript">
     window.candleData = /*[[${candles}]]*/ [];
@@ -37,7 +95,7 @@
     }));
 
     const chart = LightweightCharts.createChart(document.getElementById('chart'), {
-        width: window.innerWidth * 0.95,
+        width: 100,
         height: 500,
         layout: {
             backgroundColor: '#fff',
@@ -61,50 +119,7 @@
     }, 100);
 </script>
 
-<div>
-    <button type="button" onclick="showBuyForm()">Buy</button>
-    <button type="button" onclick="showSellForm()">Sell</button>
-</div>
 
-<div id="buyForm" style="display: block;">
-    <form method="post" th:action="@{/buy}" th:object="${tradeBindingModel}">
-    <h2 th:text="'Buy ' + ${pair}"></h2>
-    <input type="hidden" th:field="*{pair}" />
-
-    <label>Spend USD </label>
-    <input type="number" th:field="*{spend}" step="0.01" min="0" th:attr="max=${userBalance}"
-           oninput="validateSpendUsd()" id="spendUsd" name="spend" required />
-    <button type="button" onclick="setMaxUsd()">MAX</button>
-    <br/>
-
-    <label th:text="'Receive ' + ${pair}"></label>
-    <input type="text" id="receiveCrypto" name="receive" readonly />
-
-    <br/>
-    <button type="submit">Buy</button>
-    </form>
-</div>
-
-<div id="sellForm" style="display: none;">
-    <form method="post" th:action="@{/sell}" th:object = "${tradeBindingModel}">
-    <h2 th:text="'Sell ' + ${pair}"></h2>
-    <input type="hidden" th:field="*{pair}" />
-
-    <label  th:text="'Spend ' + ${pair}"></label>
-    <input type="number" th:field="*{spend}" step="any" min="0" th:attr="max=${quantityCrypto}"
-           oninput="validateSpendCrypto()" id="spendCrypto" name="spend"  required />
-    <button type="button" onclick="setMaxCrypto()">MAX</button>
-    <small th:if="${#fields.hasErrors('spend')}"
-           th:errors="*{spend}" ></small>
-    <br/>
-
-    <label >Receive USD </label>
-    <input type="text" id="receiveUsd" name="receive" readonly />
-
-    <br/>
-    <button type="submit">Sell</button>
-    </form>
-</div>
 
 <script>
     function showBuyForm() {

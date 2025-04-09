@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Transaction History</title>
+    <link th:href="@{/css/nav-style.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/transaction-history-style.css}" >
 </head>
 <body>
-<a href="/real-time-prices">Home Page</a>
-<table border="1">
+<div th:replace="~{fragments/navigation}"></div>
+<main>
+    <h2>Transaction History</h2>
+  <table border="1">
     <thead>
       <tr>
           <th>Crypto Type</th>
@@ -30,10 +34,16 @@
     <td th:text="${tran.receiveMoney != null ? tran.receiveMoney : '0'}"></td>
     <td th:text="${tran.currCryptoPrice != null ? tran.currCryptoPrice.stripTrailingZeros().toPlainString() : '0'}"></td>
     <td th:text="${#temporals.format(tran.dateTime, 'dd.MM.yyyy HH:mm')}"></td>
-    <td th:id = "profitLoss" th:text="${tran.profitLoss}"></td>
+      <td th:id = "profitLoss"
+          th:text="${#numbers.formatDecimal(tran.profitLoss, 1, 2, 'POINT')}"
+          th:classappend="${tran.profitLoss > 0 ? 'profit' : (tran.profitLoss < 0 ? 'loss' : 'neutral')}">
+      </td>
   </tr>
+
   </tbody>
 </table>
+</main>
+
 <script>
     document.querySelectorAll("#profitLoss").forEach(function (el) {
         let number = parseFloat(el.textContent);
