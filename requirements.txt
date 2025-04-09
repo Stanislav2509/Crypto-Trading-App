@@ -1,0 +1,14 @@
+1. Spring Boot Data JPA
+2. Spring Security
+3. Spring Boot Thymeleaf
+4. Spring Boot Validation
+5. Spring Boot Web
+6. Thymeleaf Extras for Spring Security
+7. MySQL Connector
+8. Jackson Mapper
+12. Spring Boot WebFlux
+14. Java WebSocket
+15. Spring Boot WebSocket
+17. Jackson Databind
+18. Webjars STOMP WebSocket
+19. Webjars SockJS Client
