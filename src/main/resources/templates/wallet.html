@@ -5,11 +5,16 @@
     <title>Wallet</title>
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+  <link th:href="@{/css/nav-style.css}" rel="stylesheet"/>
+  <link rel="stylesheet" th:href="@{/css/wallet-style.css}">
 </head>
 <body>
-<a href="/real-time-prices">Home Page</a>
-<table border="1">
-  <p>Balance in USD <span th:text="${balanceUSD}"></span></p>
+<div th:replace="~{fragments/navigation}"></div>
+ 
+
+<main>
+  <h2>Assets</h2>
+  <table border="1">
   <thead>
   <tr>
     <th>Crypto Type</th>
@@ -23,10 +28,14 @@
     <td th:text="${asset.cryptoType.symbol}"></td>
     <td th:text="${asset.totalQuantity.stripTrailingZeros().toPlainString()}"></td>
     <td th:text="${asset.moneyCurrency}"></td>
-    <td th:id="${asset.cryptoType.symbol}"></td>
+    <td th:id="${asset.cryptoType.symbol}"
+        th:text="${#numbers.formatDecimal(asset.profitLoss, 1, 2, 'POINT')}"
+        th:classappend="${asset.profitLoss > 0 ? 'profit' : (asset.profitLoss < 0 ? 'loss' : 'neutral')}">
+    </td>
   </tr>
   </tbody>
 </table>
+</main>
 
 <script>
   let socket = new SockJS('/ws');
@@ -45,6 +54,14 @@
               let profitLoss = prices[cryptoType].profitLoss;
               let profitLossCell = document.getElementById(`${cryptoType}`);
                 profitLossCell.innerText = profitLoss.toFixed(2);
+
+          profitLossCell.classList.remove("profit", "loss", "neutral");
+
+            if (profitLoss < 0) {
+                profitLossCell.style.color = "red";
+            } else if (profitLoss > 0) {
+                profitLossCell.style.color = "green";
+            }
           });
       });
   });

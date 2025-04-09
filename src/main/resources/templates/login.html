@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" th:href="@{/css/login-style.css}">
 </head>
 <body>
 <main>
+    <div class="container">
+        <img class="img" src="/images/login.jpg" alt="">
 
-    <div>
-        <h1 class="title">Login</h1>
-        <form th:action="@{/login}" th:method="POST">
+        <div class="form-container">
+            <h1 class="title">Login</h1>
 
-            <div>
+            <form th:action="@{/login}" method="post">
                 <div>
                     <input id="email" name="email" th:value="${email}" type="text" placeholder="Email" required>
                 </div>
@@ -19,19 +21,18 @@
                 <div>
                     <input id="password" name="password" type="password" placeholder="Password" required>
                 </div>
-            </div>
 
-            <div>
-                <button type="submit">Login</button>
-            </div>
+                <div>
+                    <button type="submit">Login</button>
+                </div>
+            </form>
 
-        </form>
-        <div>
-            <span>Don't have a profile?</span>
-            <a href="/register">Sign up!</a>
+            <div class="signup-link">
+                <span>Don't have a profile?</span> <a href="/register">Sign up!</a>
+            </div>
         </div>
+
     </div>
 </main>
-
 </body>
 </html>

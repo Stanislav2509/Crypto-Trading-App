@@ -2,18 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Deal Details</title>
+    <link th:href="@{/css/nav-style.css}" rel="stylesheet"/>
+    <link th:href="@{/css/deal-details-style.css}" rel="stylesheet"/>
 </head>
 <body>
-<h2>Buy Details</h2>
+<div th:replace="~{fragments/navigation}"></div>
+<main>
+    <h2>Buy Details</h2>
 
-<a href="/real-time-prices">Home Page</a>
 <p><strong>Receive: </strong> <span th:text="${transaction.receiveCrypto.stripTrailingZeros().toPlainString()}">
 </span><strong th:text="' ' + ${pair}"> </strong></p>
 <p><strong th:text="'Current Price of ' + ${pair}">
-</strong> <span th:text="${transaction.currCryptoPrice.stripTrailingZeros().toPlainString()}"></span> USD</p>
-<p><strong>Cost </strong> <span th:text="${transaction.spendMoney}"></span> USD</p>
+</strong> <span th:text="${transaction.currCryptoPrice.stripTrailingZeros().toPlainString()}"></span> <strong> USD</strong></p>
+<p><strong>Cost </strong> <span th:text="${transaction.spendMoney}"></span> <strong> USD</strong></p>
 <br>
-<p><strong>Current Balance: </strong> <span th:text="${currBalance}"></span> <strong> USD</strong></p>
 <br>
 
 <p><strong>Current Assets</strong></p>
@@ -33,5 +35,7 @@
     </tr>
     </tbody>
 </table>
+</main>
+
 </body>
 </html>

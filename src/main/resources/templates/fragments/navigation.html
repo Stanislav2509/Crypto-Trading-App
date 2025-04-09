@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <link href="../../static/css/nav-style.css" rel="stylesheet" />
+    <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v6.5.1/css/all.css"/>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header  th:fragment="navigation">
+    <a class="home" href="/real-time-prices">Home Page</a>
+
+<form th:method="Get"
+      th:action="@{/transaction-history}">
+    <input  type="submit"  value="Transaction History"/>
+</form>
+
+<form th:method="Get"
+      th:action="@{/wallet}">
+    <input type="submit"  value="View Wallet"/>
+</form>
+
+    <form th:method="Get"
+          th:action="@{/warning-reset-profile}">
+        <input   type="submit"  value="Reset Profile"/>
+    </form>
+
+<form th:method="post"
+      th:action="@{/logout}">
+    <input  type="submit"  value="Logout"/>
+</form>
+
+    <div class="dropdown">
+        <button class="dropbtn">
+            👤 <span th:text="${#authentication.name}">User</span> ▼
+        </button>
+        <div class="dropdown-content">
+            <p><strong>First name: </strong> <span th:text="${user.firstName}"></span></p>
+            <p><strong>Last name: </strong> <span th:text="${user.lastName}"></span></p>
+            <p><strong>Balance: </strong> <span th:text="${user.balance}"></span><strong> USD</strong></p>
+        </div>
+</header>
+</body>
+</html>

@@ -1,9 +1,11 @@
 package com.cryptotrading.Crypto.Trading.App.controller;
 
 import com.cryptotrading.Crypto.Trading.App.model.dto.UserRegisterBindingModel;
+import com.cryptotrading.Crypto.Trading.App.model.entity.User;
 import com.cryptotrading.Crypto.Trading.App.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,7 +64,9 @@ public class UserController {
     }
 
     @GetMapping("/warning-reset-profile")
-    public String warningResetProfile(){
+    public String warningResetProfile(Model model ,Principal principal){
+        User user = userService.findByEmail(principal.getName());
+        model.addAttribute("user", user);
         return "warning-reset-profile";
     }
 

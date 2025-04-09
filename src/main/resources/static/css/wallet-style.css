@@ -1,0 +1,88 @@
+body{
+    background-color: #121212;
+}
+h2 {
+    color: #ff6600;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align:center;
+}
+
+
+main {
+    font-family: Arial, sans-serif;
+    color: white;
+    margin: auto;
+    padding: 100px;
+}
+
+a {
+    display: inline-block;
+    background-color: #ff6600;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    margin: 20px;
+    transition: background-color 0.3s ease;
+}
+
+a:hover {
+    background-color: #e65c00;
+}
+
+table {
+    width: 80%;
+    margin: 40px auto;
+    border-collapse: collapse;
+    border: 1px solid #444;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #444;
+}
+
+th {
+    background-color: #333;
+    color: #ff6600;
+}
+
+tr:nth-child(even) {
+    background-color: #1f1f1f;
+}
+
+tr:hover {
+    background-color: #333;
+}
+
+td {
+    color: #b3b3b3;
+}
+
+td[id^="cryptoType"] {
+    font-weight: bold;
+    color: #ff6600;
+}
+
+td[id^="profitLoss"] {
+    font-weight: bold;
+    color: #ff3333;
+}
+
+p {
+    font-size: 1.2rem;
+    color: #b3b3b3;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.profit {
+    color: green;
+}
+
+.loss {
+    color: red;
+}

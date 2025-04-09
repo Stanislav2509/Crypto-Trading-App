@@ -3,6 +3,7 @@ package com.cryptotrading.Crypto.Trading.App.controller;
 import com.cryptotrading.Crypto.Trading.App.model.dto.TradeBindingModel;
 import com.cryptotrading.Crypto.Trading.App.model.entity.CandleData;
 import com.cryptotrading.Crypto.Trading.App.model.entity.CryptoType;
+import com.cryptotrading.Crypto.Trading.App.model.entity.User;
 import com.cryptotrading.Crypto.Trading.App.service.CandleDataService;
 import com.cryptotrading.Crypto.Trading.App.service.CryptoTypeService;
 import com.cryptotrading.Crypto.Trading.App.service.UserService;
@@ -50,6 +51,9 @@ public class ChartController {
 
         BigDecimal quantityFromPair = userService.getQuantityFromPair(principal.getName(), pair);
         model.addAttribute("quantityCrypto", quantityFromPair);
+
+        User user = userService.findByEmail(principal.getName());
+        model.addAttribute("user", user);
 
         return "chart";
     }
