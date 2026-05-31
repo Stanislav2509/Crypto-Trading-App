@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/register-style.css}">
+</head>
+<body>
+<main >
+    <div class="container">
+        <div class="form-wrapper">
+            <h1 class="title">Sign up</h1>
+            
+                <form th:action="@{/register}" th:method="POST" th:object="${userRegisterBindingModel}">
+                <div th:if="${hasRegistrationError}">
+                    <p class="register_error">Registration Error occurred</p>
+                </div>
+                <div class = "user-data">
+
+                    <small th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></small>
+                <input type="text" th:field="*{firstName}" placeholder="First name">
+
+                    <small th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></small>
+                <input type="text" th:field="*{lastName}" placeholder="Last name">
+
+                    <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+                <input type="email" th:field="*{email}" placeholder="Email">
+
+                    <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
+                <input type="password" th:field="*{password}" placeholder="Password">
+
+
+                <input type="password" th:field="*{confirmPassword}" placeholder="Confirm password">
+
+                    <small th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></small>
+                <input type="tel" th:field="*{phoneNumber}" placeholder="Phone number">
+
+
+                </div>
+                <div class="btn_submit">
+                    <button type="submit">Sign up</button>
+                </div>
+                </form>
+            
+            <div class="signup-link">
+                <span>Already have an account?</span> <a href="/login">Login</a>
+            </div>
+        </div>
+    </div>
+    <img class="img" src="/images/register.jpg" alt="Register Image">
+
+</main>
+</body>
+</html>

@@ -1,0 +1,133 @@
+body{
+    background-color: #2a2a2a;
+    margin: 0;
+
+}
+
+.interval{
+    color: #f77f00;
+    size: 18px;
+    font-size: 20px;
+}
+
+.intro{
+    margin-bottom: 10px;
+    margin-left: 14px;
+}
+.intro h2{
+    color: white;
+    font-size: 26px;
+}
+
+select{
+    background-color: #2a2a2a;
+    color: white;
+    padding: 8px 12px;
+}
+
+.btn-show {
+    padding: 8px 12px;
+    background-color: #f77f00;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-show:hover {
+    background-color: #a15d09;
+}
+
+main{
+    padding-left: 20px;
+}
+
+.trade {
+    display: flex;
+    flex-direction: column;
+    background-color: #2a2a2a;
+    margin: 0px;
+    padding:8px
+}
+
+.trade form {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    text-align: center;
+    background-color:#2a2a2a;
+    padding: 8px;
+}
+
+.trade label {
+    font-weight: bold;
+}
+
+.trade input {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.trade button {
+    color: white;
+    padding: 8px 22px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.btn-sell{
+    background-color: red;
+}
+.btn-sell:hover{
+    background-color: rgb(176, 13, 13);
+}
+
+.btn-buy{
+    background-color: rgb(9, 167, 9);
+}
+.btn-buy:hover{
+    background-color: rgb(6, 97, 6);
+}
+
+.btn-max{
+    background-color: #ff6600;
+}
+.btn-max:hover{
+    background-color: #9d4408;
+}
+
+
+label{
+    font-size: 1.2rem;
+     color: #ff6600;
+  
+}
+
+.buy-btn{
+    background-color: rgb(9, 167, 9);
+}
+.buy-btn:hover{
+    background-color: rgb(6, 97, 6);
+}
+
+.sell-btn{
+    background-color: red;
+}
+.sell-btn:hover{
+    background-color: rgb(176, 13, 13);
+}
+
+input[type="number"] {
+    background-color:rgb(198, 195, 195);
+    font-size: 14px;
+    font-weight: bold;
+}
+input[type="text"] {
+    background-color:rgb(198, 195, 195);
+    font-size: 14px;
+    font-weight: bold;
+}
