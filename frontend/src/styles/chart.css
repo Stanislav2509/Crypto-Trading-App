@@ -1,0 +1,138 @@
+.chart-page {
+    background-color: #2a2a2a;
+    min-height: 100vh;
+}
+
+.chart-page main {
+    padding-left: 20px;
+}
+
+.chart-page .intro {
+    margin-bottom: 10px;
+    margin-left: 14px;
+}
+
+.chart-page .intro h2 {
+    color: white;
+    font-size: 26px;
+}
+
+.chart-page .interval {
+    color: #f77f00;
+    font-size: 20px;
+}
+
+.chart-page select {
+    background-color: #2a2a2a;
+    color: white;
+    padding: 8px 12px;
+}
+
+.chart-page .btn-show {
+    padding: 8px 12px;
+    background-color: #f77f00;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.chart-page .btn-show:hover {
+    background-color: #a15d09;
+}
+
+.chart-page .chart-container {
+    height: 500px;
+}
+
+.chart-page .trade {
+    display: flex;
+    flex-direction: column;
+    background-color: #2a2a2a;
+    margin: 0;
+    padding: 8px;
+}
+
+.chart-page .trade form {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    text-align: center;
+    background-color: #2a2a2a;
+    padding: 8px;
+}
+
+.chart-page .trade label {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #ff6600;
+}
+
+.chart-page .trade input {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.chart-page .trade button {
+    color: white;
+    padding: 8px 22px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.chart-page .btn-sell {
+    background-color: red;
+}
+
+.chart-page .btn-sell:hover {
+    background-color: rgb(176, 13, 13);
+}
+
+.chart-page .btn-buy {
+    background-color: rgb(9, 167, 9);
+}
+
+.chart-page .btn-buy:hover {
+    background-color: rgb(6, 97, 6);
+}
+
+.chart-page .btn-max {
+    background-color: #ff6600;
+}
+
+.chart-page .btn-max:hover {
+    background-color: #9d4408;
+}
+
+.chart-page .buy-btn {
+    background-color: rgb(9, 167, 9);
+}
+
+.chart-page .buy-btn:hover {
+    background-color: rgb(6, 97, 6);
+}
+
+.chart-page .sell-btn {
+    background-color: red;
+}
+
+.chart-page .sell-btn:hover {
+    background-color: rgb(176, 13, 13);
+}
+
+.chart-page input[type="number"],
+.chart-page input[type="text"] {
+    background-color: rgb(198, 195, 195);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.chart-page .error-message {
+    color: #ff3333;
+    margin-left: 14px;
+}

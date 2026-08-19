@@ -1,54 +1,29 @@
-import "./nav-style.css";
+import { Link } from "react-router-dom";
+import "../styles/nav-style.css";
 
 function Navbar({ user, onLogout }) {
   return (
     <header>
+      <Link className="home" to="/real-time-prices">Home Page</Link>
 
-      <a className="home" href="/real-time-prices">
-        Home Page
-      </a>
+      <Link className="home" to="/transaction-history">Transaction History</Link>
 
-      <button onClick={() => window.location.href = "/transaction-history"}>
-        Transaction History
-      </button>
+      <Link className="home" to="/wallet">View Wallet</Link>
 
-      <button onClick={() => window.location.href = "/wallet"}>
-        View Wallet
-      </button>
+      <Link className="home" to="/warning-reset-profile">Reset Profile</Link>
 
-      <button onClick={() => window.location.href = "/warning-reset-profile"}>
-        Reset Profile
-      </button>
-
-      <button onClick={onLogout}>
-        Logout
-      </button>
+      <button type="button" onClick={onLogout}>Logout</button>
 
       <div className="dropdown">
-
-        <button className="dropbtn">
-          👤 {user.username} ▼
+        <button type="button" className="dropbtn">
+          👤 <span>{user?.email}</span> ▼
         </button>
-
         <div className="dropdown-content">
-          <p>
-            <strong>First name: </strong>
-            {user.firstName}
-          </p>
-
-          <p>
-            <strong>Last name: </strong>
-            {user.lastName}
-          </p>
-
-          <p>
-            <strong>Balance: </strong>
-            {user.balance} USD
-          </p>
+          <p><strong>First name: </strong> <span>{user?.firstName}</span></p>
+          <p><strong>Last name: </strong> <span>{user?.lastName}</span></p>
+          <p><strong>Balance: </strong> <span>{user?.balance}</span> <strong>USD</strong></p>
         </div>
-
       </div>
-
     </header>
   );
 }

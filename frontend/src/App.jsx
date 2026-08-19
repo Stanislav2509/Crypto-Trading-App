@@ -1,19 +1,31 @@
-import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login.jsx";
+import RealTimePrices from "./pages/RealTimePrices.jsx";
+import Wallet from "./pages/Wallet.jsx";
+import TransactionHistory from "./pages/TransactionHistory.jsx";
+import WarningResetProfile from "./pages/WarningResetProfile.jsx";
+import Chart from "./pages/Chart.jsx";
+import DealDetails from "./pages/DealDetails.jsx";
+import Register from "./pages/Register.jsx";
+import VerifyEmail from "./pages/VerifyEmail.jsx";
 
 function App() {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    fetch("http://localhost:8080/api/hello")
-      .then(response => response.text())
-      .then(data => setMessage(data));
-  }, []);
-
   return (
-    <div>
-      <h1>React + Spring Boot</h1>
-      <p>{message}</p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/real-time-prices" element={<RealTimePrices />} />
+        <Route path="/wallet" element={<Wallet />} />
+        <Route path="/transaction-history" element={<TransactionHistory />} />
+        <Route path="/warning-reset-profile" element={<WarningResetProfile />} />
+        <Route path="/chart/:pair" element={<Chart />} />
+        <Route path="/buy-details/:id" element={<DealDetails type="buy" />} />
+        <Route path="/sell-details/:id" element={<DealDetails type="sell" />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

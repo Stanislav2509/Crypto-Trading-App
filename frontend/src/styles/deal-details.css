@@ -1,0 +1,65 @@
+.deal-details-page {
+    background-color: #222;
+    min-height: 100vh;
+}
+
+.deal-details-page main {
+    font-family: Arial, sans-serif;
+    background-color: #222;
+    color: #f7f7f7;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 44px;
+}
+
+.deal-details-page h2 {
+    color: #ff6600;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.deal-details-page p {
+    font-size: 1.1rem;
+    margin: 10px 0;
+}
+
+.deal-details-page strong {
+    font-size: 1.2rem;
+    color: #ff6600;
+}
+
+.deal-details-page table {
+    width: 80%;
+    margin-top: 30px;
+    border-collapse: collapse;
+}
+
+.deal-details-page th,
+.deal-details-page td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #333;
+}
+
+.deal-details-page th {
+    background-color: #333;
+    color: #ff6600;
+}
+
+.deal-details-page tr:nth-child(even) {
+    background-color: #333;
+}
+
+.deal-details-page tr:nth-child(odd) {
+    background-color: #444;
+}
+
+.deal-details-page td {
+    color: #f7f7f7;
+}
+
+.deal-details-page .error-message {
+    color: #ff3333;
+}

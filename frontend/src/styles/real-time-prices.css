@@ -1,0 +1,59 @@
+.real-time-prices-page {
+    background-color: #121212;
+    color: #f0f0f0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.real-time-prices-page main {
+    padding: 40px;
+    text-align: center;
+}
+
+.real-time-prices-page h1 {
+    color: #ff9933;
+    font-size: 36px;
+    margin-bottom: 30px;
+}
+
+.real-time-prices-page table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: 80%;
+    background-color: #1c1c1c;
+    box-shadow: 0 0 15px #ff6600;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.real-time-prices-page th,
+.real-time-prices-page td {
+    padding: 15px 20px;
+    border: 1px solid #333;
+    color: #f0f0f0;
+}
+
+.real-time-prices-page th {
+    background-color: #ff6600;
+    color: white;
+    font-size: 18px;
+}
+
+.real-time-prices-page td a {
+    color: #ffa64d;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.real-time-prices-page td a:hover {
+    text-decoration: underline;
+}
+
+.real-time-prices-page .logout-btn {
+    background-color: #ff3300;
+}
+
+.real-time-prices-page .logout-btn:hover {
+    background-color: #cc2900;
+}

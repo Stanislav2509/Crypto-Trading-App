@@ -1,0 +1,70 @@
+.transaction-history-page {
+    background-color: #121212;
+    min-height: 100vh;
+}
+
+.transaction-history-page main {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #f0f0f0;
+    padding: 100px;
+    margin: auto;
+}
+
+.transaction-history-page h2 {
+    color: #ff6600;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.transaction-history-page table {
+    width: 95%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+}
+
+.transaction-history-page th,
+.transaction-history-page td {
+    padding: 12px 10px;
+    border: 1px solid #444;
+    text-align: center;
+}
+
+.transaction-history-page thead th {
+    background-color: #262626;
+    color: #ff6600;
+    font-weight: bold;
+}
+
+.transaction-history-page tbody tr:nth-child(even) {
+    background-color: #1a1a1a;
+}
+
+.transaction-history-page tbody tr:hover {
+    background-color: #2a2a2a;
+}
+
+.transaction-history-page td.profit,
+.transaction-history-page td.loss,
+.transaction-history-page td.neutral {
+    font-weight: bold;
+}
+
+.transaction-history-page .profit {
+    color: #00cc66;
+}
+
+.transaction-history-page .loss {
+    color: #ff3333;
+}
+
+.transaction-history-page .neutral {
+    color: #b3b3b3;
+}
+
+.transaction-history-page .error-message {
+    color: #ff3333;
+    text-align: center;
+}

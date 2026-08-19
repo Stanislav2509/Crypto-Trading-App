@@ -1,0 +1,114 @@
+.register-page {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+}
+
+.register-page .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 2;
+    padding-left: 100px;
+    background-color: #2a2a2a;
+}
+
+.register-page .form-wrapper {
+    width: 100%;
+    max-width: 400px;
+}
+
+.register-page .title {
+    color: #f77f00;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.register-page form {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    align-items: center;
+}
+
+.register-page input {
+    background-color: #2c2c2c;
+    color: #fff;
+    border: 1px solid #ffffff;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.register-page input::placeholder {
+    color: #bbb;
+}
+
+.register-page input:focus {
+    border-color: #f77f00;
+    outline: none;
+}
+
+.register-page small {
+    color: #ff4444;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+}
+
+.register-page .btn_submit {
+    margin-top: 10px;
+}
+
+.register-page .btn_submit button {
+    padding: 12px;
+    background-color: #ff6600;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.register-page .btn_submit button:hover {
+    background-color: #e65c00;
+}
+
+.register-page .btn_submit button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.register-page .signup-link {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.register-page .signup-link a {
+    color: #ff6600;
+    text-decoration: none;
+}
+
+.register-page .signup-link a:hover {
+    text-decoration: underline;
+}
+
+.register-page .register_error {
+    color: #ff4444;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.register-page .img {
+    flex: 1;
+    object-fit: cover;
+    width: 60%;
+    height: 100vh;
+}

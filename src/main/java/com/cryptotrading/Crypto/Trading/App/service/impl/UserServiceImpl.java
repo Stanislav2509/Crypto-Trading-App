@@ -10,7 +10,6 @@ import com.cryptotrading.Crypto.Trading.App.repo.AssetRepository;
 import com.cryptotrading.Crypto.Trading.App.repo.CryptoTypeRepository;
 import com.cryptotrading.Crypto.Trading.App.repo.TransactionRepository;
 import com.cryptotrading.Crypto.Trading.App.repo.UserRepository;
-import com.cryptotrading.Crypto.Trading.App.service.EmailService;
 import com.cryptotrading.Crypto.Trading.App.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,7 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
-public class UserServiceImpl implements UserService {
+ public class UserServiceImpl implements UserService {
     private static final BigDecimal INITIAL_BALANCE = BigDecimal.valueOf(10000.00);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;

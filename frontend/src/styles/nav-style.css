@@ -10,7 +10,8 @@ header{
 }
 
 
-header input[type="submit"] {
+header input[type="submit"],
+header button {
     background-color: #ff6600;
     color: white;
     padding: 8px 22px;
@@ -20,7 +21,8 @@ header input[type="submit"] {
     cursor: pointer;
 }
 
-header input[type="submit"]:hover {
+header input[type="submit"]:hover,
+header button:hover {
     background-color: #954109;
 }
 .home{
@@ -71,7 +73,6 @@ header input[type="submit"]:hover {
     display: block;
     margin-top: 10px;
     color: #007bff;
-    
 }
 .dropdown-content span{
     color:white;
