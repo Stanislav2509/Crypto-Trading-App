@@ -21,4 +21,5 @@ public interface UserService {
     void resetProfile(String email);
     boolean verifyEmail(String email, String code);
     boolean resendVerificationCode(String email);
+    void creditBalance(String email, BigDecimal amount);
 }

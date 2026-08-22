@@ -10,6 +10,8 @@ function Navbar({ user, onLogout }) {
 
       <Link className="home" to="/wallet">View Wallet</Link>
 
+      <Link className="home" to="/add-funds">Add Funds</Link>
+
       <Link className="home" to="/warning-reset-profile">Reset Profile</Link>
 
       <button type="button" onClick={onLogout}>Logout</button>

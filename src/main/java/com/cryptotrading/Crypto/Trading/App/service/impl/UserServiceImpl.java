@@ -13,6 +13,7 @@ import com.cryptotrading.Crypto.Trading.App.repo.UserRepository;
 import com.cryptotrading.Crypto.Trading.App.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ import java.util.Random;
 
 @Service
  public class UserServiceImpl implements UserService {
-    private static final BigDecimal INITIAL_BALANCE = BigDecimal.valueOf(10000.00);
+    private static final BigDecimal INITIAL_BALANCE = BigDecimal.ZERO;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TransactionRepository transactionRepository;
@@ -267,6 +268,17 @@ import java.util.Random;
         userRepository.save(user);
         emailService.sendVerificationCode(email, newCode);
         return false;
+    }
+
+    @Override
+    @Transactional
+    public void creditBalance(String email, BigDecimal amount) {
+        User user = findByEmail(email);
+        if (user == null) {
+            throw new IllegalStateException("User not found: " + email);
+        }
+        user.setBalance(user.getBalance().add(amount));
+        userRepository.save(user);
     }
 
     private User checkUserAvailable(Optional<User> user){

@@ -30,6 +30,7 @@ public class SecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/api/auth/login", "/api/auth/register",
                                 "/api/auth/verify-email", "/api/auth/resend-verification-code").permitAll()
+                        .requestMatchers("/api/payments/webhook").permitAll()
                         .requestMatchers("/ws", "/ws/**").permitAll()
                         .anyRequest().authenticated()
 
