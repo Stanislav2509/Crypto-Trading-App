@@ -1,7 +1,10 @@
 package com.cryptotrading.Crypto.Trading.App.model.entity;
 
+import com.cryptotrading.Crypto.Trading.App.model.enums.MoneyCurrency;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -23,6 +26,10 @@ public class User extends BaseEntity {
 
     @Column(precision = 10, scale = 2)
     private BigDecimal balance;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "balance_currency", length = 3)
+    private MoneyCurrency balanceCurrency;
     @Email
     @Column(nullable = false, unique = true)
     private String email;
@@ -69,6 +76,14 @@ public class User extends BaseEntity {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public MoneyCurrency getBalanceCurrency() {
+        return balanceCurrency;
+    }
+
+    public void setBalanceCurrency(MoneyCurrency balanceCurrency) {
+        this.balanceCurrency = balanceCurrency;
     }
 
     public String getEmail() {

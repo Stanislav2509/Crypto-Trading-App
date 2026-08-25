@@ -8,6 +8,7 @@ import com.cryptotrading.Crypto.Trading.App.model.entity.Transaction;
 import com.cryptotrading.Crypto.Trading.App.service.CandleDataService;
 import com.cryptotrading.Crypto.Trading.App.service.CryptoTypeService;
 import com.cryptotrading.Crypto.Trading.App.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -50,26 +51,28 @@ public class ChartRestController {
     }
 
     @PostMapping("/buy")
-    public Map<String, Long> buyCrypto(@RequestBody TradeBindingModel tradeBindingModel, Principal principal) {
+    public ResponseEntity<Map<String, Object>> buyCrypto(@RequestBody TradeBindingModel tradeBindingModel, Principal principal) {
         Optional<Transaction> transaction = userService.buyCrypto(
                 principal.getName(),
                 tradeBindingModel.getPair(),
-                tradeBindingModel.getSpend(),
-                tradeBindingModel.getReceive()
+                tradeBindingModel.getSpend()
         );
 
-        return Map.of("transactionId", transaction.map(Transaction::getId).orElse(0L));
+        return transaction
+                .<ResponseEntity<Map<String, Object>>>map(t -> ResponseEntity.ok(Map.of("transactionId", t.getId())))
+                .orElseGet(() -> ResponseEntity.badRequest().body(Map.of("error", "Trade could not be completed")));
     }
 
     @PostMapping("/sell")
-    public Map<String, Long> sellCrypto(@RequestBody TradeBindingModel tradeBindingModel, Principal principal) {
+    public ResponseEntity<Map<String, Object>> sellCrypto(@RequestBody TradeBindingModel tradeBindingModel, Principal principal) {
         Optional<Transaction> transaction = userService.sellCrypto(
                 principal.getName(),
                 tradeBindingModel.getPair(),
-                tradeBindingModel.getSpend(),
-                tradeBindingModel.getReceive()
+                tradeBindingModel.getSpend()
         );
 
-        return Map.of("transactionId", transaction.map(Transaction::getId).orElse(0L));
+        return transaction
+                .<ResponseEntity<Map<String, Object>>>map(t -> ResponseEntity.ok(Map.of("transactionId", t.getId())))
+                .orElseGet(() -> ResponseEntity.badRequest().body(Map.of("error", "Trade could not be completed")));
     }
 }

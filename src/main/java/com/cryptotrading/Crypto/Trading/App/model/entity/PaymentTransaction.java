@@ -1,5 +1,6 @@
 package com.cryptotrading.Crypto.Trading.App.model.entity;
 
+import com.cryptotrading.Crypto.Trading.App.model.enums.MoneyCurrency;
 import com.cryptotrading.Crypto.Trading.App.model.enums.PaymentStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,6 +24,10 @@ public class PaymentTransaction extends BaseEntity {
 
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal amount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "currency", length = 3)
+    private MoneyCurrency currency;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -56,6 +61,14 @@ public class PaymentTransaction extends BaseEntity {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public MoneyCurrency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(MoneyCurrency currency) {
+        this.currency = currency;
     }
 
     public PaymentStatus getStatus() {

@@ -21,9 +21,8 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction findById(Long id) {
-        Optional<Transaction> byId = transactionRepository.findById(id);
-        return byId.orElse(null);
+    public Optional<Transaction> findByIdForUser(Long id, String email) {
+        return transactionRepository.findByIdAndUser_Email(id, email);
     }
 
     @Override

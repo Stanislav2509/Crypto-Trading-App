@@ -50,6 +50,9 @@ function AddFundsSuccess() {
     navigate("/login");
   }
 
+  const balanceCurrency = user?.balanceCurrency ?? "USD";
+  const currencySymbol = balanceCurrency === "EUR" ? "€" : "$";
+
   return (
     <div className="add-funds-page">
       <Navbar user={user} onLogout={handleLogout} />
@@ -61,7 +64,7 @@ function AddFundsSuccess() {
 
         {user && (
           <p className="current-balance">
-            Current balance: <strong>{user.balance} USD</strong>
+            Current balance: <strong>{currencySymbol}{user.balance} {balanceCurrency}</strong>
           </p>
         )}
 

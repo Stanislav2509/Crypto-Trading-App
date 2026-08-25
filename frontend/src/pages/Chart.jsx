@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createChart } from "lightweight-charts";
 import Navbar from "../components/Navbar.jsx";
+import { USD_TO_EUR_RATE } from "../utils/currency.js";
 import "../styles/chart.css";
 
 const INTERVAL_OPTIONS = [
@@ -23,10 +24,10 @@ function Chart() {
   const [error, setError] = useState("");
 
   const [activeForm, setActiveForm] = useState("buy");
-  const [spendUsd, setSpendUsd] = useState("");
+  const [spendAmount, setSpendAmount] = useState("");
   const [receiveCrypto, setReceiveCrypto] = useState("");
   const [spendCrypto, setSpendCrypto] = useState("");
-  const [receiveUsd, setReceiveUsd] = useState("");
+  const [receiveAmount, setReceiveAmount] = useState("");
 
   const chartContainerRef = useRef(null);
   const chartRef = useRef(null);
@@ -48,6 +49,34 @@ function Chart() {
       }
       return response.json();
     });
+  }
+
+  async function tradeFetch(url, body) {
+    const token = localStorage.getItem("token");
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify(body),
+    });
+
+    if (response.status === 401 || response.status === 403) {
+      localStorage.removeItem("token");
+      navigate("/login");
+      return null;
+    }
+
+    let data = null;
+    try {
+      data = await response.json();
+    } catch {
+      data = null;
+    }
+
+    if (!response.ok) {
+      throw new Error(data?.error || "Trade could not be completed. Please try again.");
+    }
+
+    return data;
   }
 
   useEffect(() => {
@@ -128,30 +157,34 @@ function Chart() {
     navigate("/login");
   }
 
+  const balanceCurrency = user?.balanceCurrency ?? "USD";
+
   function handleShowInterval(e) {
     e.preventDefault();
     setInterval_(selectedInterval);
   }
 
-  function handleSpendUsdChange(e) {
+  function handleSpendAmountChange(e) {
     const value = e.target.value;
     const max = parseFloat(chartData?.userBalance);
     const numeric = parseFloat(value);
     const clamped = !Number.isNaN(max) && numeric > max ? String(max) : value;
-    setSpendUsd(clamped);
+    setSpendAmount(clamped);
 
     const spend = parseFloat(clamped);
     const currentPrice = parseFloat(chartData?.currentPrice);
-    const receive = spend / currentPrice;
+    const usdSpend = balanceCurrency === "EUR" ? spend / USD_TO_EUR_RATE : spend;
+    const receive = usdSpend / currentPrice;
     setReceiveCrypto(Number.isNaN(receive) ? "" : receive.toFixed(6));
   }
 
-  function handleMaxUsd() {
+  function handleMaxAmount() {
     const value = chartData?.userBalance ?? "";
-    setSpendUsd(String(value));
+    setSpendAmount(String(value));
     const spend = parseFloat(value);
     const currentPrice = parseFloat(chartData?.currentPrice);
-    const receive = spend / currentPrice;
+    const usdSpend = balanceCurrency === "EUR" ? spend / USD_TO_EUR_RATE : spend;
+    const receive = usdSpend / currentPrice;
     setReceiveCrypto(Number.isNaN(receive) ? "" : receive.toFixed(6));
   }
 
@@ -164,8 +197,9 @@ function Chart() {
 
     const spend = parseFloat(clamped);
     const currentPrice = parseFloat(chartData?.currentPrice);
-    const receive = spend * currentPrice;
-    setReceiveUsd(Number.isNaN(receive) ? "" : receive.toFixed(2));
+    const usdValue = spend * currentPrice;
+    const receive = balanceCurrency === "EUR" ? usdValue * USD_TO_EUR_RATE : usdValue;
+    setReceiveAmount(Number.isNaN(receive) ? "" : receive.toFixed(2));
   }
 
   function handleMaxCrypto() {
@@ -173,43 +207,40 @@ function Chart() {
     setSpendCrypto(String(value));
     const spend = parseFloat(value);
     const currentPrice = parseFloat(chartData?.currentPrice);
-    const receive = spend * currentPrice;
-    setReceiveUsd(Number.isNaN(receive) ? "" : receive.toFixed(2));
+    const usdValue = spend * currentPrice;
+    const receive = balanceCurrency === "EUR" ? usdValue * USD_TO_EUR_RATE : usdValue;
+    setReceiveAmount(Number.isNaN(receive) ? "" : receive.toFixed(2));
   }
 
   async function handleBuySubmit(e) {
     e.preventDefault();
+    setError("");
     try {
-      const result = await authFetch("/api/buy", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pair,
-          spend: parseFloat(spendUsd),
-          receive: parseFloat(receiveCrypto),
-        }),
+      const result = await tradeFetch("/api/buy", {
+        pair,
+        spend: parseFloat(spendAmount),
       });
-      if (result) navigate(`/buy-details/${result.transactionId}`);
+      if (result && result.transactionId) {
+        navigate(`/buy-details/${result.transactionId}`);
+      }
     } catch (err) {
-      setError("Unable to complete purchase. Please try again.");
+      setError(err.message || "Unable to complete purchase. Please try again.");
     }
   }
 
   async function handleSellSubmit(e) {
     e.preventDefault();
+    setError("");
     try {
-      const result = await authFetch("/api/sell", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pair,
-          spend: parseFloat(spendCrypto),
-          receive: parseFloat(receiveUsd),
-        }),
+      const result = await tradeFetch("/api/sell", {
+        pair,
+        spend: parseFloat(spendCrypto),
       });
-      if (result) navigate(`/sell-details/${result.transactionId}`);
+      if (result && result.transactionId) {
+        navigate(`/sell-details/${result.transactionId}`);
+      }
     } catch (err) {
-      setError("Unable to complete sale. Please try again.");
+      setError(err.message || "Unable to complete sale. Please try again.");
     }
   }
 
@@ -252,19 +283,19 @@ function Chart() {
             {activeForm === "buy" && (
               <div id="buyForm">
                 <form onSubmit={handleBuySubmit}>
-                  <label>Spend USD </label>
+                  <label>Spend {balanceCurrency} </label>
                   <input
                     type="number"
                     step="0.01"
                     min="0"
                     max={chartData?.userBalance}
-                    id="spendUsd"
+                    id="spendAmount"
                     name="spend"
-                    value={spendUsd}
-                    onChange={handleSpendUsdChange}
+                    value={spendAmount}
+                    onChange={handleSpendAmountChange}
                     required
                   />
-                  <button className="btn-max" type="button" onClick={handleMaxUsd}>MAX</button>
+                  <button className="btn-max" type="button" onClick={handleMaxAmount}>MAX</button>
                   <br />
 
                   <label>Receive {chartData?.pair ?? pair}</label>
@@ -294,8 +325,8 @@ function Chart() {
                   <button className="btn-max" type="button" onClick={handleMaxCrypto}>MAX</button>
                   <br />
 
-                  <label>Receive USD </label>
-                  <input type="text" id="receiveUsd" name="receive" value={receiveUsd} readOnly />
+                  <label>Receive {balanceCurrency} </label>
+                  <input type="text" id="receiveAmount" name="receive" value={receiveAmount} readOnly />
 
                   <br />
                   <button className="sell-btn" type="submit">Sell</button>

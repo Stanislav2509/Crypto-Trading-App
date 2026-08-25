@@ -3,8 +3,10 @@ package com.cryptotrading.Crypto.Trading.App.service.impl;
 import com.cryptotrading.Crypto.Trading.App.model.dto.CheckoutSessionResponse;
 import com.cryptotrading.Crypto.Trading.App.model.entity.PaymentTransaction;
 import com.cryptotrading.Crypto.Trading.App.model.entity.User;
+import com.cryptotrading.Crypto.Trading.App.model.enums.MoneyCurrency;
 import com.cryptotrading.Crypto.Trading.App.model.enums.PaymentStatus;
 import com.cryptotrading.Crypto.Trading.App.repo.PaymentTransactionRepository;
+import com.cryptotrading.Crypto.Trading.App.service.CurrencyConversionService;
 import com.cryptotrading.Crypto.Trading.App.service.PaymentService;
 import com.cryptotrading.Crypto.Trading.App.service.UserService;
 import com.stripe.exception.SignatureVerificationException;
@@ -36,6 +38,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final UserService userService;
     private final PaymentTransactionRepository paymentTransactionRepository;
+    private final CurrencyConversionService currencyConversionService;
 
     @Value("${app.frontend-base-url}")
     private String frontendBaseUrl;
@@ -43,9 +46,10 @@ public class PaymentServiceImpl implements PaymentService {
     @Value("${stripe.webhook-secret}")
     private String webhookSecret;
 
-    public PaymentServiceImpl(UserService userService, PaymentTransactionRepository paymentTransactionRepository) {
+    public PaymentServiceImpl(UserService userService, PaymentTransactionRepository paymentTransactionRepository, CurrencyConversionService currencyConversionService) {
         this.userService = userService;
         this.paymentTransactionRepository = paymentTransactionRepository;
+        this.currencyConversionService = currencyConversionService;
     }
 
     @Override
@@ -56,6 +60,12 @@ public class PaymentServiceImpl implements PaymentService {
         if (user == null) {
             throw new IllegalArgumentException("User not found");
         }
+
+        MoneyCurrency accountCurrency = user.getBalanceCurrency();
+        if (accountCurrency == null) {
+            accountCurrency = MoneyCurrency.USD; // defensive only; Step 2 backfill should prevent this
+        }
+        String stripeCurrencyCode = accountCurrency.name().toLowerCase();
 
         long amountInCents = validatedAmount.multiply(CENTS_PER_DOLLAR).longValueExact();
 
@@ -70,11 +80,11 @@ public class PaymentServiceImpl implements PaymentService {
                                 .setQuantity(1L)
                                 .setPriceData(
                                         SessionCreateParams.LineItem.PriceData.builder()
-                                                .setCurrency("usd")
+                                                .setCurrency(stripeCurrencyCode)
                                                 .setUnitAmount(amountInCents)
                                                 .setProductData(
                                                         SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                                .setName("Virtual balance top-up - $" + validatedAmount.toPlainString())
+                                                                .setName("Virtual balance top-up - " + currencySymbol(accountCurrency) + validatedAmount.toPlainString())
                                                                 .build()
                                                 )
                                                 .build()
@@ -89,11 +99,16 @@ public class PaymentServiceImpl implements PaymentService {
         paymentTransaction.setUser(user);
         paymentTransaction.setStripeSessionId(session.getId());
         paymentTransaction.setAmount(validatedAmount);
+        paymentTransaction.setCurrency(accountCurrency);
         paymentTransaction.setStatus(PaymentStatus.PENDING);
         paymentTransaction.setCreatedAt(LocalDateTime.now());
         paymentTransactionRepository.save(paymentTransaction);
 
         return new CheckoutSessionResponse(session.getUrl());
+    }
+
+    private String currencySymbol(MoneyCurrency currency) {
+        return currency == MoneyCurrency.EUR ? "€" : "$";
     }
 
     private BigDecimal validateAndNormalizeAmount(BigDecimal amount) {
@@ -160,10 +175,24 @@ public class PaymentServiceImpl implements PaymentService {
             throw new IllegalStateException("Checkout session client_reference_id does not match stored payment transaction user");
         }
 
+        MoneyCurrency paidCurrency = paymentTransaction.getCurrency();
+        if (paidCurrency == null) {
+            paidCurrency = MoneyCurrency.USD; // defensive for pre-migration rows
+        }
+        MoneyCurrency currentCurrency = user.getBalanceCurrency();
+        if (currentCurrency == null) {
+            currentCurrency = MoneyCurrency.USD;
+        }
+
+        BigDecimal creditAmount = paymentTransaction.getAmount();
+        if (paidCurrency != currentCurrency) {
+            creditAmount = currencyConversionService.convert(creditAmount, paidCurrency, currentCurrency);
+        }
+
         paymentTransaction.setStatus(PaymentStatus.COMPLETED);
         paymentTransaction.setProcessedAt(LocalDateTime.now());
         paymentTransactionRepository.save(paymentTransaction);
 
-        userService.creditBalance(user.getEmail(), paymentTransaction.getAmount());
+        userService.creditBalance(user.getEmail(), creditAmount);
     }
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
+import { currencySymbol } from "../utils/currency.js";
 import "../styles/transaction-history.css";
 
 function formatQuantity(value) {
@@ -10,11 +11,21 @@ function formatQuantity(value) {
   return num.toString().replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
 }
 
-function formatMoney(value) {
+function formatCash(value, currency) {
   if (value === null || value === undefined) return "0";
   const num = parseFloat(value);
   if (Number.isNaN(num)) return value;
-  return num.toFixed(2);
+  const label = currency ?? "USD";
+  return `${currencySymbol(label)}${num.toFixed(2)} ${label}`;
+}
+
+function formatSignedCash(value, currency) {
+  if (value === null || value === undefined) return "0";
+  const num = parseFloat(value);
+  if (Number.isNaN(num)) return value;
+  const label = currency ?? "USD";
+  const sign = num > 0 ? "+" : "";
+  return `${sign}${currencySymbol(label)}${num.toFixed(2)} ${label}`;
 }
 
 function formatDateTime(value) {
@@ -111,14 +122,14 @@ function TransactionHistory() {
               <tr key={index}>
                 <td>{tran.cryptoSymbol}</td>
                 <td>{tran.transactionType}</td>
-                <td>{formatMoney(tran.spendMoney)}</td>
+                <td>{tran.spendMoney == null ? "0" : formatCash(tran.spendMoney, tran.currency)}</td>
                 <td>{formatQuantity(tran.receiveCrypto)}</td>
                 <td>{formatQuantity(tran.spendCrypto)}</td>
-                <td>{formatMoney(tran.receiveMoney)}</td>
-                <td>{formatQuantity(tran.currCryptoPrice)}</td>
+                <td>{tran.receiveMoney == null ? "0" : formatCash(tran.receiveMoney, tran.currency)}</td>
+                <td>{formatQuantity(tran.currCryptoPrice)} USD</td>
                 <td>{formatDateTime(tran.dateTime)}</td>
                 <td className={profitLossClass(tran.profitLoss)}>
-                  {formatMoney(tran.profitLoss)}
+                  {formatSignedCash(tran.profitLoss, tran.currency)}
                 </td>
               </tr>
             ))}

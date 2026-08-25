@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import Navbar from "../components/Navbar.jsx";
+import { currencySymbol, convertUsdForDisplay } from "../utils/currency.js";
 import "../styles/wallet.css";
 
 function formatQuantity(value) {
@@ -15,6 +16,13 @@ function formatMoney(value) {
   const num = parseFloat(value);
   if (Number.isNaN(num)) return value;
   return num.toFixed(2);
+}
+
+function formatSignedMoney(value) {
+  const num = parseFloat(value);
+  if (Number.isNaN(num)) return value;
+  const sign = num > 0 ? "+" : "";
+  return `${sign}${num.toFixed(2)}`;
 }
 
 function profitLossClass(profitLoss) {
@@ -79,10 +87,13 @@ function Wallet() {
             prev.map((asset) => {
               const update = incoming[asset.symbol];
               if (!update) return asset;
+              // Normalize the WebSocket Asset shape (moneyCurrency/profitLoss)
+              // into the canonical wallet-state shape (marketValueUsd/profitLossUsd)
+              // so REST-loaded and live-updated rows never diverge in field names.
               return {
                 ...asset,
-                moneyCurrency: update.moneyCurrency,
-                profitLoss: update.profitLoss,
+                marketValueUsd: update.moneyCurrency,
+                profitLossUsd: update.profitLoss,
               };
             })
           );
@@ -101,6 +112,8 @@ function Wallet() {
     navigate("/login");
   }
 
+  const balanceCurrency = user?.balanceCurrency ?? "USD";
+
   return (
     <div className="wallet-page">
       <Navbar user={user} onLogout={handleLogout} />
@@ -114,21 +127,28 @@ function Wallet() {
             <tr>
               <th>Crypto Type</th>
               <th>Total Quantity</th>
-              <th>Money in Currency</th>
+              <th>Current Value</th>
               <th>Profit/Loss</th>
             </tr>
           </thead>
           <tbody>
-            {assets.map((asset) => (
-              <tr key={asset.symbol}>
-                <td>{asset.symbol}</td>
-                <td>{formatQuantity(asset.totalQuantity)}</td>
-                <td>{formatMoney(asset.moneyCurrency)}</td>
-                <td className={profitLossClass(asset.profitLoss)}>
-                  {formatMoney(asset.profitLoss)}
-                </td>
-              </tr>
-            ))}
+            {assets.map((asset) => {
+              const displayValue = convertUsdForDisplay(asset.marketValueUsd, balanceCurrency);
+              const displayProfitLoss = convertUsdForDisplay(asset.profitLossUsd, balanceCurrency);
+              return (
+                <tr key={asset.symbol}>
+                  <td>{asset.symbol}</td>
+                  <td>{formatQuantity(asset.totalQuantity)}</td>
+                  <td>
+                    {currencySymbol(balanceCurrency)}
+                    {formatMoney(displayValue)} {balanceCurrency}
+                  </td>
+                  <td className={profitLossClass(displayProfitLoss)}>
+                    {formatSignedMoney(displayProfitLoss)} {balanceCurrency}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </main>

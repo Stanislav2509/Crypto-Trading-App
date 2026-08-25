@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
+import { currencySymbol, convertUsdForDisplay } from "../utils/currency.js";
 import "../styles/deal-details.css";
 
 function formatQuantity(value) {
@@ -75,6 +76,8 @@ function DealDetails({ type }) {
     navigate("/login");
   }
 
+  const balanceCurrency = user?.balanceCurrency ?? "USD";
+
   return (
     <div className="deal-details-page">
       <Navbar user={user} onLogout={handleLogout} />
@@ -86,7 +89,7 @@ function DealDetails({ type }) {
         {transaction && (
           <>
             {type === "sell" ? (
-              <p><strong>Receive: </strong> <span>{formatMoney(transaction.receiveMoney)}</span> <strong> USD</strong></p>
+              <p><strong>Receive: </strong> <span>{currencySymbol(transaction.currency)}{formatMoney(transaction.receiveMoney)}</span> <strong> {transaction.currency ?? "USD"}</strong></p>
             ) : (
               <p><strong>Receive: </strong> <span>{formatQuantity(transaction.receiveCrypto)}</span> <strong> {transaction.cryptoSymbol}</strong></p>
             )}
@@ -96,7 +99,7 @@ function DealDetails({ type }) {
             {type === "sell" ? (
               <p><strong>Cost </strong> <span>{formatQuantity(transaction.spendCrypto)}</span> <strong>{transaction.cryptoSymbol}</strong></p>
             ) : (
-              <p><strong>Cost </strong> <span>{formatMoney(transaction.spendMoney)}</span> <strong> USD</strong></p>
+              <p><strong>Cost </strong> <span>{currencySymbol(transaction.currency)}{formatMoney(transaction.spendMoney)}</span> <strong> {transaction.currency ?? "USD"}</strong></p>
             )}
           </>
         )}
@@ -110,17 +113,23 @@ function DealDetails({ type }) {
             <tr>
               <th>Crypto Type</th>
               <th>Total Quantity</th>
-              <th>Money in Currency</th>
+              <th>Current Value</th>
             </tr>
           </thead>
           <tbody>
-            {assets.map((asset) => (
-              <tr key={asset.symbol}>
-                <td>{asset.symbol}</td>
-                <td>{formatQuantity(asset.totalQuantity)}</td>
-                <td>{formatMoney(asset.moneyCurrency)}</td>
-              </tr>
-            ))}
+            {assets.map((asset) => {
+              const displayValue = convertUsdForDisplay(asset.marketValueUsd, balanceCurrency);
+              return (
+                <tr key={asset.symbol}>
+                  <td>{asset.symbol}</td>
+                  <td>{formatQuantity(asset.totalQuantity)}</td>
+                  <td>
+                    {currencySymbol(balanceCurrency)}
+                    {formatMoney(displayValue)} {balanceCurrency}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </main>

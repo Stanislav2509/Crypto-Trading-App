@@ -10,6 +10,7 @@ import Register from "./pages/Register.jsx";
 import VerifyEmail from "./pages/VerifyEmail.jsx";
 import AddFunds from "./pages/AddFunds.jsx";
 import AddFundsSuccess from "./pages/AddFundsSuccess.jsx";
+import ConvertCurrency from "./pages/ConvertCurrency.jsx";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/warning-reset-profile" element={<WarningResetProfile />} />
         <Route path="/add-funds" element={<AddFunds />} />
         <Route path="/add-funds/success" element={<AddFundsSuccess />} />
+        <Route path="/convert-currency" element={<ConvertCurrency />} />
         <Route path="/chart/:pair" element={<Chart />} />
         <Route path="/buy-details/:id" element={<DealDetails type="buy" />} />
         <Route path="/sell-details/:id" element={<DealDetails type="sell" />} />

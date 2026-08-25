@@ -7,7 +7,7 @@ const MIN_AMOUNT = 1;
 const MAX_AMOUNT = 10000;
 const AMOUNT_PATTERN = /^\d*\.?\d{0,2}$/;
 
-function validateAmount(rawValue) {
+function validateAmount(rawValue, currencySymbol) {
   const value = rawValue.trim();
   if (value === "" || value === ".") {
     return "Please enter an amount.";
@@ -18,10 +18,10 @@ function validateAmount(rawValue) {
     return "Please enter a valid amount.";
   }
   if (numeric < MIN_AMOUNT) {
-    return `Minimum amount is $${MIN_AMOUNT.toFixed(2)}.`;
+    return `Minimum amount is ${currencySymbol}${MIN_AMOUNT.toFixed(2)}.`;
   }
   if (numeric > MAX_AMOUNT) {
-    return `Maximum amount is $${MAX_AMOUNT.toFixed(2)}.`;
+    return `Maximum amount is ${currencySymbol}${MAX_AMOUNT.toFixed(2)}.`;
   }
 
   return "";
@@ -79,6 +79,9 @@ function AddFunds() {
     navigate("/login");
   }
 
+  const balanceCurrency = user?.balanceCurrency ?? "USD";
+  const currencySymbol = balanceCurrency === "EUR" ? "€" : "$";
+
   function handleAmountChange(event) {
     const value = event.target.value;
     if (AMOUNT_PATTERN.test(value)) {
@@ -95,7 +98,7 @@ function AddFunds() {
       return;
     }
 
-    const validationMessage = validateAmount(amount);
+    const validationMessage = validateAmount(amount, currencySymbol);
     if (validationMessage) {
       setError(validationMessage);
       return;
@@ -144,7 +147,7 @@ function AddFunds() {
         {error && <p className="error-message">{error}</p>}
 
         <form className="amount-form" onSubmit={handleSubmit}>
-          <label htmlFor="amount">Amount (USD)</label>
+          <label htmlFor="amount">Amount ({balanceCurrency})</label>
           <input
             id="amount"
             name="amount"
@@ -157,7 +160,7 @@ function AddFunds() {
             disabled={loading}
           />
           <p className="amount-hint">
-            Minimum: ${MIN_AMOUNT.toFixed(2)} &nbsp;|&nbsp; Maximum: ${MAX_AMOUNT.toFixed(2)}
+            Minimum: {currencySymbol}{MIN_AMOUNT.toFixed(2)} &nbsp;|&nbsp; Maximum: {currencySymbol}{MAX_AMOUNT.toFixed(2)}
           </p>
           <button type="submit" disabled={loading}>
             {loading ? "Redirecting..." : "Continue to Stripe"}

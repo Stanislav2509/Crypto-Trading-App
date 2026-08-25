@@ -1,7 +1,10 @@
 package com.cryptotrading.Crypto.Trading.App.model.entity;
 
+import com.cryptotrading.Crypto.Trading.App.model.enums.MoneyCurrency;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -26,6 +29,9 @@ public class Transaction extends BaseEntity {
     private BigDecimal spendMoney;
     @Column(precision = 19, scale = 8)
     private BigDecimal currCryptoPrice;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "currency", length = 3)
+    private MoneyCurrency currency;
     private double profitLoss;
     private LocalDateTime dateTime;
     @NotBlank
@@ -85,6 +91,14 @@ public class Transaction extends BaseEntity {
 
     public void setCurrCryptoPrice(BigDecimal currCryptoPrice) {
         this.currCryptoPrice = currCryptoPrice;
+    }
+
+    public MoneyCurrency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(MoneyCurrency currency) {
+        this.currency = currency;
     }
 
     public double getProfitLoss() {
