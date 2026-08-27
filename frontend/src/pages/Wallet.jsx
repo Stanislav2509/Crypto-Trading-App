@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import Navbar from "../components/Navbar.jsx";
@@ -137,7 +137,13 @@ function Wallet() {
               const displayProfitLoss = convertUsdForDisplay(asset.profitLossUsd, balanceCurrency);
               return (
                 <tr key={asset.symbol}>
-                  <td>{asset.symbol}</td>
+                  <td>
+                    {asset.symbol && asset.symbol.includes("/") ? (
+                      <Link to={`/chart/${asset.symbol.replace("/", "-")}`}>{asset.symbol}</Link>
+                    ) : (
+                      asset.symbol
+                    )}
+                  </td>
                   <td>{formatQuantity(asset.totalQuantity)}</td>
                   <td>
                     {currencySymbol(balanceCurrency)}

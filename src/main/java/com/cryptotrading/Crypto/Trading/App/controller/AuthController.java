@@ -74,6 +74,10 @@ public class AuthController {
             return ResponseEntity.badRequest().body(errors);
         }
 
+        if (userRepository.findByEmail(userRegisterBindingModel.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email is already registered"));
+        }
+
         boolean hasSuccessfullyRegistration = userService.register(userRegisterBindingModel);
 
         if (!hasSuccessfullyRegistration) {

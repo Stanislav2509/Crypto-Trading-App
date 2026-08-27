@@ -1,70 +1,40 @@
 .transaction-history-page {
-    background-color: #121212;
+    background-color: var(--mx-bg);
+    color: var(--mx-text);
     min-height: 100vh;
 }
 
 .transaction-history-page main {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #f0f0f0;
-    padding: 100px;
+    font-family: var(--mx-sans);
+    color: var(--mx-text);
+    padding: 40px 20px 60px;
     margin: auto;
+    overflow-x: auto;
 }
 
 .transaction-history-page h2 {
-    color: #ff6600;
-    font-size: 2rem;
+    color: var(--mx-green);
+    text-shadow: 0 0 12px var(--mx-glow);
+    font-size: 1.8rem;
     margin-bottom: 20px;
     text-align: center;
+    font-family: var(--mx-mono);
+    letter-spacing: 1px;
 }
 
 .transaction-history-page table {
-    width: 95%;
+    width: 100%;
     margin: 20px auto;
-    border-collapse: collapse;
-    background-color: #1e1e1e;
-    border: 1px solid #333;
+    min-width: 900px;
 }
 
 .transaction-history-page th,
 .transaction-history-page td {
     padding: 12px 10px;
-    border: 1px solid #444;
     text-align: center;
+    font-size: 14px;
 }
 
-.transaction-history-page thead th {
-    background-color: #262626;
-    color: #ff6600;
-    font-weight: bold;
-}
-
-.transaction-history-page tbody tr:nth-child(even) {
-    background-color: #1a1a1a;
-}
-
-.transaction-history-page tbody tr:hover {
-    background-color: #2a2a2a;
-}
-
-.transaction-history-page td.profit,
-.transaction-history-page td.loss,
-.transaction-history-page td.neutral {
-    font-weight: bold;
-}
-
-.transaction-history-page .profit {
-    color: #00cc66;
-}
-
-.transaction-history-page .loss {
-    color: #ff3333;
-}
-
-.transaction-history-page .neutral {
-    color: #b3b3b3;
-}
-
-.transaction-history-page .error-message {
-    color: #ff3333;
-    text-align: center;
+.transaction-history-page td {
+    font-family: var(--mx-mono);
 }

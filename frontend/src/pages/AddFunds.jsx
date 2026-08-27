@@ -163,7 +163,7 @@ function AddFunds() {
             Minimum: {currencySymbol}{MIN_AMOUNT.toFixed(2)} &nbsp;|&nbsp; Maximum: {currencySymbol}{MAX_AMOUNT.toFixed(2)}
           </p>
           <button type="submit" disabled={loading}>
-            {loading ? "Redirecting..." : "Continue to Stripe"}
+            {loading ? "Redirecting..." : "Continue"}
           </button>
         </form>
       </main>

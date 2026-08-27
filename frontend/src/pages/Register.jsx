@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/register.css";
-import registerImage from "../assets/register.jpg";
+import MatrixRain from "../components/MatrixRain.jsx";
 
 function Register() {
   const [firstName, setFirstName] = useState("");
@@ -11,14 +11,14 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
-  const [registrationError, setRegistrationError] = useState(false);
+  const [registrationError, setRegistrationError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   async function handleSubmit(event) {
     event.preventDefault();
     setFieldErrors({});
-    setRegistrationError(false);
+    setRegistrationError("");
     setLoading(true);
 
     try {
@@ -38,16 +38,18 @@ function Register() {
       if (!response.ok) {
         const body = await response.json().catch(() => ({}));
         if (body.error) {
-          setRegistrationError(true);
-        } else {
+          setRegistrationError(body.error);
+        } else if (Object.keys(body).length > 0) {
           setFieldErrors(body);
+        } else {
+          setRegistrationError("Registration failed. Please try again.");
         }
         return;
       }
 
       navigate(`/verify-email?email=${encodeURIComponent(email)}`);
     } catch (err) {
-      setRegistrationError(true);
+      setRegistrationError("Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -60,7 +62,7 @@ function Register() {
           <h1 className="title">Sign up</h1>
 
           <form onSubmit={handleSubmit}>
-            {registrationError && <p className="register_error">Registration Error occurred</p>}
+            {registrationError && <p className="register_error">{registrationError}</p>}
 
             <div className="user-data">
               {fieldErrors.firstName && <small>{fieldErrors.firstName}</small>}
@@ -139,7 +141,7 @@ function Register() {
           </div>
         </div>
       </div>
-      <img className="img" src={registerImage} alt="Register Image" />
+      <MatrixRain className="img" />
     </main>
   );
 }

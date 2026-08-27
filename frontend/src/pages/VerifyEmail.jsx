@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import "../styles/verify-email.css";
 
 function VerifyEmail() {
@@ -92,8 +92,6 @@ function VerifyEmail() {
               {resending ? "Sending..." : "Send new code"}
             </button>
           </form>
-
-          <Link to="/register" className="back-link">Back to registration</Link>
         </div>
       </div>
     </div>

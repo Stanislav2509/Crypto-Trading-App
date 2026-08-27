@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/login-style.css";
-import loginImage from "../assets/login.jpg";
+import loginMatrixImage from "../assets/login-matrix.jpg";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -42,12 +42,12 @@ function Login() {
   return (
     <main className="login-page">
       <div className="container">
-        <img className="img" src={loginImage} alt="" />
+        <img className="img" src={loginMatrixImage} alt="" />
 
-        <div className="form-container">
-          <h1 className="title">Login</h1>
-
+      <div className="form-container">
+           <h1 className="title">Login</h1>
           <form onSubmit={handleSubmit}>
+
             <div>
               <input
                 id="email"
@@ -84,6 +84,7 @@ function Login() {
           <div className="signup-link">
             <span>Don't have a profile?</span> <Link to="/register">Sign up!</Link>
           </div>
+
         </div>
       </div>
     </main>

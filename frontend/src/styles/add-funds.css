@@ -1,26 +1,29 @@
 .add-funds-page {
-    background-color: #121212;
+    background-color: var(--mx-bg);
     min-height: 100vh;
 }
 
 .add-funds-page main {
-    font-family: Arial, sans-serif;
-    color: white;
-    max-width: 600px;
+    font-family: var(--mx-sans);
+    color: var(--mx-text);
+    max-width: 520px;
     margin: auto;
-    padding: 100px 20px 40px;
+    padding: 60px 20px 40px;
     text-align: center;
 }
 
 .add-funds-page h1 {
-    color: #ff6600;
-    font-size: 2rem;
+    color: var(--mx-green);
+    text-shadow: 0 0 12px var(--mx-glow);
+    font-size: 1.8rem;
     margin-bottom: 10px;
+    font-family: var(--mx-mono);
+    letter-spacing: 1px;
 }
 
 .add-funds-page p {
-    color: #b3b3b3;
-    font-size: 1.1rem;
+    color: var(--mx-text-dim);
+    font-size: 1.05rem;
 }
 
 .add-funds-page .amount-form {
@@ -29,78 +32,43 @@
     gap: 8px;
     margin-top: 30px;
     text-align: left;
+    background-color: var(--mx-panel);
+    border: 1px solid var(--mx-border);
+    border-radius: 10px;
+    padding: 24px;
 }
 
 .add-funds-page .amount-form label {
-    color: #b3b3b3;
+    color: var(--mx-text-dim);
     font-size: 1rem;
 }
 
 .add-funds-page .amount-form input {
     padding: 14px 16px;
     font-size: 1.3rem;
-    background-color: #1f1f1f;
-    color: #ff6600;
-    border: 1px solid #444;
-    border-radius: 6px;
-}
-
-.add-funds-page .amount-form input:focus {
-    outline: none;
-    border-color: #ff6600;
-}
-
-.add-funds-page .amount-form input:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
+    color: var(--mx-green);
+    font-family: var(--mx-mono);
 }
 
 .add-funds-page .amount-hint {
     font-size: 0.9rem;
-    color: #808080;
+    color: var(--mx-text-dim);
     margin: 0 0 10px;
 }
 
 .add-funds-page .amount-form button {
     padding: 14px;
-    font-size: 1.2rem;
-    background-color: #ff6600;
-    color: #121212;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.add-funds-page .amount-form button:hover:not(:disabled) {
-    background-color: #e65c00;
-}
-
-.add-funds-page .amount-form button:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
+    font-size: 1.1rem;
 }
 
 .add-funds-page .current-balance {
-    font-size: 1.3rem;
-    color: white;
+    font-size: 1.2rem;
+    color: var(--mx-text);
     margin-top: 20px;
-}
-
-.add-funds-page .info-message {
-    color: #ff6600;
-}
-
-.add-funds-page .error-message {
-    color: red;
 }
 
 .add-funds-page button[type="button"] {
     margin-top: 30px;
     padding: 12px 24px;
-    font-size: 1.1rem;
-    background-color: #ff6600;
-    color: #121212;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    font-size: 1rem;
 }

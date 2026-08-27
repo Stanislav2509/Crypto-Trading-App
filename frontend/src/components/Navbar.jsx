@@ -1,5 +1,9 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "../styles/nav-style.css";
+
+function navLinkClass({ isActive }) {
+  return isActive ? "home active" : "home";
+}
 
 function Navbar({ user, onLogout }) {
   const balanceCurrency = user?.balanceCurrency ?? "USD";
@@ -7,23 +11,27 @@ function Navbar({ user, onLogout }) {
 
   return (
     <header>
-      <Link className="home" to="/real-time-prices">Home Page</Link>
+      <span className="brand">MATRIX TRADER</span>
 
-      <Link className="home" to="/transaction-history">Transaction History</Link>
+      <nav className="nav-links">
+        <NavLink className={navLinkClass} to="/real-time-prices">Home Page</NavLink>
 
-      <Link className="home" to="/wallet">View Wallet</Link>
+        <NavLink className={navLinkClass} to="/transaction-history">Transaction History</NavLink>
 
-      <Link className="home" to="/add-funds">Add Funds</Link>
+        <NavLink className={navLinkClass} to="/wallet">View Wallet</NavLink>
 
-      <Link className="home" to="/convert-currency">Convert Currency</Link>
+        <NavLink className={navLinkClass} to="/add-funds">Add Funds</NavLink>
 
-      <Link className="home" to="/warning-reset-profile">Reset Profile</Link>
+        <NavLink className={navLinkClass} to="/convert-currency">Convert Currency</NavLink>
 
-      <button type="button" onClick={onLogout}>Logout</button>
+        <NavLink className={navLinkClass} to="/warning-reset-profile">Reset Profile</NavLink>
+      </nav>
+
+      <button type="button" className="mx-btn-danger logout-btn" onClick={onLogout}>Logout</button>
 
       <div className="dropdown">
         <button type="button" className="dropbtn">
-          👤 <span>{user?.email}</span> ▼
+          <span className="user-icon">👤</span> <span>{user?.email}</span> <span className="caret">▾</span>
         </button>
         <div className="dropdown-content">
           <p><strong>First name: </strong> <span>{user?.firstName}</span></p>

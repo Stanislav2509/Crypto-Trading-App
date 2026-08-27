@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { createChart } from "lightweight-charts";
+import { createChart, ColorType } from "lightweight-charts";
+import { Client } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 import Navbar from "../components/Navbar.jsx";
 import { USD_TO_EUR_RATE } from "../utils/currency.js";
 import "../styles/chart.css";
@@ -32,6 +34,8 @@ function Chart() {
   const chartContainerRef = useRef(null);
   const chartRef = useRef(null);
   const seriesRef = useRef(null);
+  const lastCandleRef = useRef(null);
+  const appliedIntervalRef = useRef(interval);
 
   function authFetch(url, options) {
     const token = localStorage.getItem("token");
@@ -86,6 +90,8 @@ function Chart() {
       return;
     }
 
+    appliedIntervalRef.current = interval;
+
     async function loadInitialData() {
       try {
         const [chart, userData] = await Promise.all([
@@ -108,32 +114,53 @@ function Chart() {
     if (!chartContainerRef.current) return;
 
     const chart = createChart(chartContainerRef.current, {
-      width: 100,
-      height: 500,
+      width: chartContainerRef.current.clientWidth,
+      height: chartContainerRef.current.clientHeight,
       layout: {
-        backgroundColor: "#fff",
-        textColor: "#333",
+        background: { type: ColorType.Solid, color: "#000000" },
+        textColor: "#d1d5db",
       },
       grid: {
-        vertLines: { color: "#eee" },
-        horzLines: { color: "#eee" },
+        vertLines: { color: "rgba(255, 255, 255, 0.07)" },
+        horzLines: { color: "rgba(255, 255, 255, 0.07)" },
       },
       timeScale: {
         timeVisible: true,
         secondsVisible: false,
+        borderColor: "#2a2a2a",
+      },
+      rightPriceScale: {
+        visible: true,
+        borderVisible: true,
+        borderColor: "#2a2a2a",
+        textColor: "#d1d5db",
+        autoScale: true,
       },
     });
 
-    const candleSeries = chart.addCandlestickSeries();
+    const candleSeries = chart.addCandlestickSeries({
+      priceScaleId: "right",
+      upColor: "#2962ff",
+      downColor: "#ffffff",
+      borderUpColor: "#2962ff",
+      borderDownColor: "#ffffff",
+      wickUpColor: "#2962ff",
+      wickDownColor: "#ffffff",
+      priceLineColor: "#5b6b7c",
+    });
 
     chartRef.current = chart;
     seriesRef.current = candleSeries;
 
-    setTimeout(() => {
-      chart.resize(window.innerWidth * 0.95, 500);
-    }, 100);
+    function handleResize() {
+      if (chartContainerRef.current) {
+        chart.resize(chartContainerRef.current.clientWidth, chartContainerRef.current.clientHeight);
+      }
+    }
+    window.addEventListener("resize", handleResize);
 
     return () => {
+      window.removeEventListener("resize", handleResize);
       chart.remove();
       chartRef.current = null;
       seriesRef.current = null;
@@ -143,14 +170,86 @@ function Chart() {
   useEffect(() => {
     if (!chartData || !seriesRef.current) return;
     const formattedData = chartData.candles.map((c) => ({
-      time: c.time,
-      open: c.open,
-      high: c.high,
-      low: c.low,
-      close: c.close,
+      time: Number(c.time),
+      open: Number(c.open),
+      high: Number(c.high),
+      low: Number(c.low),
+      close: Number(c.close),
     }));
     seriesRef.current.setData(formattedData);
+
+    const latest = formattedData[formattedData.length - 1];
+    lastCandleRef.current = latest ? { ...latest } : null;
   }, [chartData]);
+
+  function applyLiveTick(livePrice) {
+    const last = lastCandleRef.current;
+    const series = seriesRef.current;
+    if (!last || !series) return;
+
+    const bucketSeconds = (appliedIntervalRef.current || 1) * 60;
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    const bucketStart = Math.floor(nowSeconds / bucketSeconds) * bucketSeconds;
+
+    if (bucketStart < last.time) {
+      return;
+    }
+
+    if (bucketStart === last.time) {
+      const updated = {
+        time: last.time,
+        open: last.open,
+        high: Math.max(last.high, livePrice),
+        low: Math.min(last.low, livePrice),
+        close: livePrice,
+      };
+      lastCandleRef.current = updated;
+      series.update(updated);
+      return;
+    }
+
+    const newCandle = {
+      time: bucketStart,
+      open: last.close,
+      high: livePrice,
+      low: livePrice,
+      close: livePrice,
+    };
+    lastCandleRef.current = newCandle;
+    series.update(newCandle);
+  }
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    fetch("/api/prices", { headers: { Authorization: `Bearer ${token}` } }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const normalizedPair = pair.replace("-", "/");
+
+    const stompClient = new Client({
+      webSocketFactory: () => new SockJS("/ws"),
+      onConnect: () => {
+        stompClient.subscribe("/topic/prices", (message) => {
+          const incoming = JSON.parse(message.body);
+          const rawPrice = incoming[normalizedPair];
+          if (rawPrice === undefined) return;
+          const livePrice = Number(rawPrice);
+          if (Number.isNaN(livePrice)) return;
+          applyLiveTick(livePrice);
+        });
+      },
+    });
+    stompClient.activate();
+
+    return () => {
+      stompClient.deactivate();
+    };
+  }, [pair]);
 
   function handleLogout() {
     localStorage.removeItem("token");

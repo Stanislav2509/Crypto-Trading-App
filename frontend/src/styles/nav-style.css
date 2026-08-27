@@ -1,81 +1,131 @@
-header{
+header {
     display: flex;
-    justify-content: center;
-    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
     align-items: center;
-    gap: 16px;
-    height: 56px;
-    background-color: #333;
-    border-bottom: 2px solid #ff6600;
+    gap: 14px;
+    padding: 10px 24px;
+    background-color: var(--mx-black);
+    border-bottom: 1px solid var(--mx-border-strong);
+    box-shadow: 0 1px 12px rgba(51, 255, 122, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
+.brand {
+    font-family: var(--mx-mono);
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--mx-green);
+    text-shadow: 0 0 10px var(--mx-glow);
+    margin-right: 8px;
+    white-space: nowrap;
+}
+
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
 
 header input[type="submit"],
 header button {
-    background-color: #ff6600;
-    color: white;
-    padding: 8px 22px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
+    background-color: var(--mx-panel);
+    color: var(--mx-text);
+    padding: 8px 18px;
+    border: 1px solid var(--mx-border-strong);
+    border-radius: 6px;
+    font-size: 14px;
     cursor: pointer;
 }
 
-header input[type="submit"]:hover,
-header button:hover {
-    background-color: #954109;
-}
-.home{
+.home {
     display: inline-block;
-    background-color: #ff6600;
-    color: white;
-    padding:8px 22px;
+    background-color: transparent;
+    color: var(--mx-text-dim);
+    padding: 8px 14px;
     text-decoration: none;
-    font-size: 16px;
-    border-radius: 8px;
-    width: 84px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    white-space: nowrap;
 }
 
 .home:hover {
-    background-color: #954109;
+    color: var(--mx-green);
+    border-color: var(--mx-border);
+}
+
+.home.active {
+    color: var(--mx-green);
+    background-color: var(--mx-green-soft);
+    border-color: var(--mx-green);
+    box-shadow: 0 0 10px var(--mx-glow);
+}
+
+.logout-btn {
+    white-space: nowrap;
 }
 
 .dropdown {
     position: relative;
     display: inline-block;
-    margin-left: 10px;
 }
 
 .dropbtn {
-    background-color: #eee;
-    border: none;
+    background-color: var(--mx-panel);
+    border: 1px solid var(--mx-border-strong);
     cursor: pointer;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    background-color: #7a7070;
-    color: white;
+    padding: 9px 14px;
+    font-size: 14px;
+    border-radius: 6px;
+    color: var(--mx-text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dropbtn:hover {
+    border-color: var(--mx-green);
+    color: var(--mx-green);
+}
+
+.caret {
+    color: var(--mx-green);
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
     right: 0;
-    background-color: #7a7070;
-    width: 200px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-    padding: 10px;
+    top: calc(100% + 6px);
+    background-color: var(--mx-panel);
+    border: 1px solid var(--mx-border-strong);
+    width: 220px;
+    box-shadow: var(--mx-shadow), 0 0 16px rgba(51, 255, 122, 0.12);
+    padding: 12px 14px;
     z-index: 1;
-    border-radius: 5px;
+    border-radius: 8px;
 }
 
 .dropdown-content p {
     display: block;
     margin-top: 10px;
-    color: #007bff;
+    color: var(--mx-text-dim);
+    font-size: 14px;
 }
-.dropdown-content span{
-    color:white;
+
+.dropdown-content p:first-child {
+    margin-top: 0;
+}
+
+.dropdown-content span {
+    color: var(--mx-text);
 }
 
 .dropdown:hover .dropdown-content {
@@ -83,6 +133,23 @@ header button:hover {
 }
 
 .dropdown-content strong {
-    font-size: 1.2rem;
-    color: white;
+    font-size: 1rem;
+    color: var(--mx-green);
+}
+
+@media (max-width: 768px) {
+    header {
+        gap: 8px;
+    }
+
+    .nav-links {
+        order: 3;
+        width: 100%;
+        gap: 6px;
+    }
+
+    .home {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
 }

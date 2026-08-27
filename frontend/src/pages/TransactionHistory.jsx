@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
 import { currencySymbol } from "../utils/currency.js";
 import "../styles/transaction-history.css";
@@ -120,7 +120,13 @@ function TransactionHistory() {
           <tbody>
             {transactions.map((tran, index) => (
               <tr key={index}>
-                <td>{tran.cryptoSymbol}</td>
+                <td>
+                  {tran.cryptoSymbol && tran.cryptoSymbol.includes("/") ? (
+                    <Link to={`/chart/${tran.cryptoSymbol.replace("/", "-")}`}>{tran.cryptoSymbol}</Link>
+                  ) : (
+                    tran.cryptoSymbol
+                  )}
+                </td>
                 <td>{tran.transactionType}</td>
                 <td>{tran.spendMoney == null ? "0" : formatCash(tran.spendMoney, tran.currency)}</td>
                 <td>{formatQuantity(tran.receiveCrypto)}</td>

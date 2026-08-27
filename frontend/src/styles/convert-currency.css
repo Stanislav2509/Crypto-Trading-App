@@ -1,26 +1,29 @@
 .convert-currency-page {
-    background-color: #121212;
+    background-color: var(--mx-bg);
     min-height: 100vh;
 }
 
 .convert-currency-page main {
-    font-family: Arial, sans-serif;
-    color: white;
-    max-width: 600px;
+    font-family: var(--mx-sans);
+    color: var(--mx-text);
+    max-width: 520px;
     margin: auto;
-    padding: 100px 20px 40px;
+    padding: 60px 20px 40px;
     text-align: center;
 }
 
 .convert-currency-page h1 {
-    color: #ff6600;
-    font-size: 2rem;
+    color: var(--mx-green);
+    text-shadow: 0 0 12px var(--mx-glow);
+    font-size: 1.8rem;
     margin-bottom: 10px;
+    font-family: var(--mx-mono);
+    letter-spacing: 1px;
 }
 
 .convert-currency-page > main > p {
-    color: #b3b3b3;
-    font-size: 1.1rem;
+    color: var(--mx-text-dim);
+    font-size: 1.05rem;
 }
 
 .convert-currency-page .convert-box {
@@ -28,43 +31,30 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    background-color: var(--mx-panel);
+    border: 1px solid var(--mx-border);
+    border-radius: 10px;
+    padding: 24px;
 }
 
 .convert-currency-page .current-balance {
-    font-size: 1.3rem;
-    color: white;
+    font-size: 1.2rem;
+    color: var(--mx-text);
 }
 
 .convert-currency-page .rate-hint {
     font-size: 0.95rem;
-    color: #808080;
+    color: var(--mx-text-dim);
+    font-family: var(--mx-mono);
 }
 
 .convert-currency-page .preview {
-    font-size: 1.2rem;
-    color: #ff9933;
+    font-size: 1.15rem;
+    color: var(--mx-green);
 }
 
 .convert-currency-page button {
     margin-top: 10px;
     padding: 14px;
-    font-size: 1.2rem;
-    background-color: #ff6600;
-    color: #121212;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.convert-currency-page button:hover:not(:disabled) {
-    background-color: #e65c00;
-}
-
-.convert-currency-page button:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.convert-currency-page .error-message {
-    color: #ff3333;
+    font-size: 1.1rem;
 }

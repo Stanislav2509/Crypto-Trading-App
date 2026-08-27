@@ -1,138 +1,155 @@
 .chart-page {
-    background-color: #2a2a2a;
+    background-color: var(--mx-bg);
+    color: var(--mx-text);
     min-height: 100vh;
 }
 
 .chart-page main {
-    padding-left: 20px;
+    padding: 20px;
 }
 
 .chart-page .intro {
     margin-bottom: 10px;
-    margin-left: 14px;
 }
 
 .chart-page .intro h2 {
-    color: white;
-    font-size: 26px;
+    color: var(--mx-text);
+    font-size: 24px;
+    font-family: var(--mx-mono);
+}
+
+.chart-page .intro form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .chart-page .interval {
-    color: #f77f00;
-    font-size: 20px;
-}
-
-.chart-page select {
-    background-color: #2a2a2a;
-    color: white;
-    padding: 8px 12px;
+    color: var(--mx-green);
+    font-size: 16px;
 }
 
 .chart-page .btn-show {
-    padding: 8px 12px;
-    background-color: #f77f00;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.chart-page .btn-show:hover {
-    background-color: #a15d09;
+    padding: 8px 16px;
 }
 
 .chart-page .chart-container {
-    height: 500px;
+    /* Fills the viewport below the navbar (~60px), main's padding (40px),
+       the pair title + timeframe controls block (~125px) and the
+       chart-trade row's top margin (16px), with a safety margin. */
+    height: calc(100vh - 260px);
+    min-height: 500px;
+    border: 1px solid var(--mx-border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.chart-page .chart-trade {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.chart-page .chart-container {
+    flex: 1;
+    min-width: 300px;
 }
 
 .chart-page .trade {
     display: flex;
     flex-direction: column;
-    background-color: #2a2a2a;
+    background-color: var(--mx-panel);
+    border: 1px solid var(--mx-border);
+    border-radius: 10px;
     margin: 0;
-    padding: 8px;
+    padding: 16px;
+    min-width: 280px;
+}
+
+.chart-page .trade .btn {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
 }
 
 .chart-page .trade form {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 10px;
-    align-items: center;
-    text-align: center;
-    background-color: #2a2a2a;
-    padding: 8px;
+    align-items: stretch;
+    text-align: left;
+    background-color: transparent;
+    padding: 4px 0;
 }
 
 .chart-page .trade label {
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: #ff6600;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--mx-text-dim);
 }
 
 .chart-page .trade input {
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
-
-.chart-page .trade button {
-    color: white;
-    padding: 8px 22px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
+    width: 100%;
 }
 
 .chart-page .btn-sell {
-    background-color: red;
+    border-color: rgba(255, 77, 77, 0.5);
+    color: var(--mx-danger);
 }
 
 .chart-page .btn-sell:hover {
-    background-color: rgb(176, 13, 13);
+    background-color: rgba(255, 77, 77, 0.12);
+    border-color: var(--mx-danger);
+    box-shadow: 0 0 14px rgba(255, 77, 77, 0.35);
+    color: var(--mx-danger);
 }
 
 .chart-page .btn-buy {
-    background-color: rgb(9, 167, 9);
+    border-color: var(--mx-green);
+    color: var(--mx-green);
 }
 
 .chart-page .btn-buy:hover {
-    background-color: rgb(6, 97, 6);
+    background-color: var(--mx-green-soft);
+    box-shadow: 0 0 14px var(--mx-glow);
 }
 
 .chart-page .btn-max {
-    background-color: #ff6600;
-}
-
-.chart-page .btn-max:hover {
-    background-color: #9d4408;
+    align-self: flex-start;
+    padding: 4px 12px;
+    font-size: 12px;
 }
 
 .chart-page .buy-btn {
-    background-color: rgb(9, 167, 9);
+    border-color: var(--mx-green);
+    color: var(--mx-green);
+    background-color: var(--mx-green-soft);
 }
 
 .chart-page .buy-btn:hover {
-    background-color: rgb(6, 97, 6);
+    background-color: var(--mx-green-dim);
+    color: #04120a;
 }
 
 .chart-page .sell-btn {
-    background-color: red;
+    border-color: var(--mx-danger);
+    color: var(--mx-danger);
+    background-color: rgba(255, 77, 77, 0.1);
 }
 
 .chart-page .sell-btn:hover {
-    background-color: rgb(176, 13, 13);
-}
-
-.chart-page input[type="number"],
-.chart-page input[type="text"] {
-    background-color: rgb(198, 195, 195);
-    font-size: 14px;
-    font-weight: bold;
+    background-color: var(--mx-danger);
+    color: #1a0505;
 }
 
 .chart-page .error-message {
-    color: #ff3333;
-    margin-left: 14px;
+    margin-top: 10px;
+}
+
+@media (max-width: 900px) {
+    .chart-page .chart-trade {
+        flex-direction: column;
+    }
 }

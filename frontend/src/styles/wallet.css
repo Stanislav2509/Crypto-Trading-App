@@ -1,68 +1,46 @@
 .wallet-page {
-    background-color: #121212;
+    background-color: var(--mx-bg);
+    color: var(--mx-text);
     min-height: 100vh;
 }
 
 .wallet-page h2 {
-    color: #ff6600;
-    font-size: 2rem;
+    color: var(--mx-green);
+    text-shadow: 0 0 12px var(--mx-glow);
+    font-size: 1.8rem;
     margin-bottom: 20px;
     text-align: center;
+    font-family: var(--mx-mono);
+    letter-spacing: 1px;
+    padding-top: 40px;
 }
 
 .wallet-page main {
-    font-family: Arial, sans-serif;
-    color: white;
+    font-family: var(--mx-sans);
+    color: var(--mx-text);
     margin: auto;
-    padding: 100px;
+    padding: 0 20px 60px;
 }
 
 .wallet-page table {
-    width: 80%;
-    margin: 40px auto;
-    border-collapse: collapse;
-    border: 1px solid #444;
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
 }
 
 .wallet-page table th,
 .wallet-page table td {
-    padding: 12px;
     text-align: center;
-    border: 1px solid #444;
-}
-
-.wallet-page th {
-    background-color: #333;
-    color: #ff6600;
-}
-
-.wallet-page tr:nth-child(even) {
-    background-color: #1f1f1f;
-}
-
-.wallet-page tr:hover {
-    background-color: #333;
 }
 
 .wallet-page td {
-    color: #b3b3b3;
+    color: var(--mx-text);
+    font-family: var(--mx-mono);
 }
 
 .wallet-page p {
-    font-size: 1.2rem;
-    color: #b3b3b3;
+    font-size: 1.1rem;
+    color: var(--mx-text-dim);
     text-align: center;
     margin-top: 20px;
-}
-
-.wallet-page .profit {
-    color: green;
-}
-
-.wallet-page .loss {
-    color: red;
-}
-
-.wallet-page .neutral {
-    color: #b3b3b3;
 }

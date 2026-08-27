@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
 import { currencySymbol, convertUsdForDisplay } from "../utils/currency.js";
 import "../styles/deal-details.css";
@@ -121,7 +121,13 @@ function DealDetails({ type }) {
               const displayValue = convertUsdForDisplay(asset.marketValueUsd, balanceCurrency);
               return (
                 <tr key={asset.symbol}>
-                  <td>{asset.symbol}</td>
+                  <td>
+                    {asset.symbol && asset.symbol.includes("/") ? (
+                      <Link to={`/chart/${asset.symbol.replace("/", "-")}`}>{asset.symbol}</Link>
+                    ) : (
+                      asset.symbol
+                    )}
+                  </td>
                   <td>{formatQuantity(asset.totalQuantity)}</td>
                   <td>
                     {currencySymbol(balanceCurrency)}
