@@ -87,11 +87,12 @@ public class WebSocketClient implements WebSocket.Listener {
                 if(assetOpt.isPresent()){
                     Asset asset  = assetOpt.get();
 
-                    double profitLoss = (cryptoType.getPrice().subtract(asset.getPriceDuringPurchase()))
+                    double profitLoss = (cryptoType.getPrice().subtract(asset.getAveragePurchasePrice()))
                             .multiply(asset.getTotalQuantity()).doubleValue();
                     asset.setProfitLoss(profitLoss);
                     asset.setPriceNow(cryptoType.getPrice());
                     assetRepository.save(asset);
+
                     String key = asset.getCryptoType().getSymbol();
                     AssetDTO assetDTO = new AssetDTO();
                     assetDTO.setMoneyCurrency(asset.getMoneyCurrency());

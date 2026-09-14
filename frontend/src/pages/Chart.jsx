@@ -107,7 +107,6 @@ function Chart() {
     }
 
     loadInitialData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pair, interval, navigate]);
 
   useEffect(() => {

@@ -16,7 +16,7 @@ public class Asset extends BaseEntity{
     @Column(precision = 10, scale = 2)
     private BigDecimal moneyCurrency;
     @Column(precision = 19, scale = 8)
-    private BigDecimal priceDuringPurchase;
+    private BigDecimal averagePurchasePrice;
     @Column(precision = 19, scale = 8)
     private BigDecimal priceNow;
     private double profitLoss;
@@ -42,12 +42,12 @@ public class Asset extends BaseEntity{
         this.moneyCurrency = moneyCurrency;
     }
 
-    public BigDecimal getPriceDuringPurchase() {
-        return priceDuringPurchase;
+    public BigDecimal getAveragePurchasePrice() {
+        return averagePurchasePrice;
     }
 
-    public void setPriceDuringPurchase(BigDecimal priceDuringPurchase) {
-        this.priceDuringPurchase = priceDuringPurchase;
+    public void setAveragePurchasePrice(BigDecimal averagePurchasePrice) {
+        this.averagePurchasePrice = averagePurchasePrice;
     }
 
     public BigDecimal getPriceNow() {

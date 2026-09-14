@@ -63,10 +63,9 @@ public class PaymentServiceImpl implements PaymentService {
 
         MoneyCurrency accountCurrency = user.getBalanceCurrency();
         if (accountCurrency == null) {
-            accountCurrency = MoneyCurrency.USD; // defensive only; Step 2 backfill should prevent this
+            accountCurrency = MoneyCurrency.USD;
         }
         String stripeCurrencyCode = accountCurrency.name().toLowerCase();
-
         long amountInCents = validatedAmount.multiply(CENTS_PER_DOLLAR).longValueExact();
 
         SessionCreateParams params = SessionCreateParams.builder()

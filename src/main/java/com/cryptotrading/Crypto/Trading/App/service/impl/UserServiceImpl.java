@@ -84,6 +84,7 @@ import java.util.Random;
         return true;
     }
     @Override
+    @Transactional
     public Optional<Transaction> buyCrypto(String email, String pair, BigDecimal spend) {
         if (spend == null || spend.compareTo(BigDecimal.ZERO) <= 0) {
             return Optional.empty();
@@ -141,11 +142,18 @@ import java.util.Random;
 
         Optional<Asset> assetOpt = assetRepository.findByCryptoTypeAndUser(cryptoType,user);
         Asset asset = assetOpt.orElseGet(Asset::new);
-        if (asset.getTotalQuantity() == null) {
-            asset.setTotalQuantity(BigDecimal.ZERO.add(cryptoQuantity));
-        } else {
-            asset.setTotalQuantity(asset.getTotalQuantity().add(cryptoQuantity));
-        }
+
+        BigDecimal oldQuantity = asset.getTotalQuantity() != null
+                ? asset.getTotalQuantity() : BigDecimal.ZERO;
+        BigDecimal oldAveragePrice = asset.getAveragePurchasePrice() != null
+                ? asset.getAveragePurchasePrice() : BigDecimal.ZERO;
+        BigDecimal newTotalQuantity = oldQuantity.add(cryptoQuantity);
+        BigDecimal newAveragePrice = oldQuantity.compareTo(BigDecimal.ZERO) == 0
+                ? price : oldQuantity.multiply(oldAveragePrice)
+                        .add(cryptoQuantity.multiply(price))
+                        .divide(newTotalQuantity, 8, RoundingMode.HALF_UP);
+
+        asset.setTotalQuantity(newTotalQuantity);
         asset.setUser(user);
         asset.setCryptoType(cryptoType);
         if (asset.getMoneyCurrency() == null) {
@@ -153,7 +161,7 @@ import java.util.Random;
         } else {
             asset.setMoneyCurrency(asset.getMoneyCurrency().add(usdSpend));
         }
-        asset.setPriceDuringPurchase(price);
+        asset.setAveragePurchasePrice(newAveragePrice);
         assetRepository.save(asset);
 
         return Optional.of(transaction);
@@ -181,6 +189,7 @@ import java.util.Random;
     }
 
     @Override
+    @Transactional
     public Optional<Transaction> sellCrypto(String email, String pair, BigDecimal quantity) {
         if (quantity == null || quantity.compareTo(BigDecimal.ZERO) <= 0) {
             return Optional.empty();
@@ -228,7 +237,12 @@ import java.util.Random;
         transaction.setReceiveMoney(creditAmount);
         transaction.setCurrency(accountCurrency);
         transaction.setCurrCryptoPrice(price);
-        transaction.setProfitLoss(asset.getProfitLoss());
+
+        BigDecimal averageAcquisitionPrice = asset.getAveragePurchasePrice() != null
+                ? asset.getAveragePurchasePrice()
+                : BigDecimal.ZERO;
+        BigDecimal realizedPnL = price.subtract(averageAcquisitionPrice).multiply(quantity);
+        transaction.setProfitLoss(realizedPnL.doubleValue());
 
         transactionRepository.save(transaction);
         user.setBalance(user.getBalance().add(creditAmount));
@@ -314,7 +328,7 @@ import java.util.Random;
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(1));
         userRepository.save(user);
         emailService.sendVerificationCode(email, newCode);
-        return false;
+        return true;
     }
 
     @Override
